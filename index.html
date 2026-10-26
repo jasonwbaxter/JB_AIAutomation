@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Jason Baxter’s Microsoft AI Field Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Eleven visual guides and training plans by Jason Baxter for choosing and adopting the right Microsoft AI tools, Copilot modes, apps, models and devices.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a field-guide shelf. Hero = title + fanned deck of real guide covers; then a role chooser that lights up guides; then the numbered volume grid on a family-tree trunk. */
+:root {
+  --bg: #F3F5F8; --surface: #FFFFFF; --ink: #15191E; --muted: #58626E; --line: #DCE1E7; --soft: #E9EDF2;
+  --accent: #0067B8; --accent-ink: #FFFFFF;
+  --c1: #F25022; --c2: #7FBA00; --c3: #00A4EF; --c4: #FFB900;
+  --shadow: 0 1px 2px rgba(15,25,40,.06), 0 8px 24px rgba(15,25,40,.08);
+  --shadow-lift: 0 2px 4px rgba(15,25,40,.08), 0 24px 48px rgba(15,25,40,.18);
+  --display: "Bricolage Grotesque", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1015; --surface: #161A21; --ink: #ECEFF3; --muted: #9BA5B1; --line: #29303A; --soft: #1D232B;
+    --accent: #4AA6F2; --accent-ink: #06121F;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    --shadow-lift: 0 2px 4px rgba(0,0,0,.5), 0 24px 48px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1015; --surface: #161A21; --ink: #ECEFF3; --muted: #9BA5B1; --line: #29303A; --soft: #1D232B;
+  --accent: #4AA6F2; --accent-ink: #06121F;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  --shadow-lift: 0 2px 4px rgba(0,0,0,.5), 0 24px 48px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 6px; }
+.stripe i:nth-child(1) { background: var(--c1); } .stripe i:nth-child(2) { background: var(--c2); }
+.stripe i:nth-child(3) { background: var(--c3); } .stripe i:nth-child(4) { background: var(--c4); }
+.band { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1240px; margin: 0 auto; }
+.mono { font-family: var(--mono); }
+
+/* ---------- Hero ---------- */
+.hero { padding-block: 56px 40px; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+.kicker { font: 700 12.5px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+.kicker .dots { display: inline-flex; gap: 3px; }
+.kicker .dots i { width: 8px; height: 8px; }
+.kicker .dots i:nth-child(1){background:var(--c1)} .kicker .dots i:nth-child(2){background:var(--c2)} .kicker .dots i:nth-child(3){background:var(--c3)} .kicker .dots i:nth-child(4){background:var(--c4)}
+h1 { font: 800 clamp(44px, 7.2vw, 96px)/.92 var(--display); letter-spacing: -.035em; margin: 18px 0 22px; text-wrap: balance; }
+h1 .owner { display: block; font-size: .42em; letter-spacing: -.02em; line-height: 1.1; margin-bottom: .16em; color: var(--muted); }
+h1 .ai { position: relative; white-space: nowrap; }
+h1 .ai::after { content: ""; position: absolute; left: 2%; right: 2%; bottom: .02em; height: .11em;
+  background: linear-gradient(90deg, var(--c1) 0 25%, var(--c2) 25% 50%, var(--c3) 50% 75%, var(--c4) 75%); }
+.standfirst { font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); max-width: 34em; margin: 0; text-wrap: pretty; }
+.standfirst b { color: var(--ink); font-weight: 600; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--body); padding: 14px 20px; border-radius: 6px; text-decoration: none; border: 1px solid transparent; cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--ink); }
+.stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line); }
+.stat b { display: block; font: 800 34px/1 var(--display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13.5px; color: var(--muted); }
+
+/* Fanned deck of real guide covers */
+.deck { position: relative; height: 560px; }
+.deck a { position: absolute; left: 50%; top: 50%; width: 260px; aspect-ratio: 4 / 5; margin: -162px 0 0 -130px;
+  border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-lift); background: var(--surface);
+  transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) rotate(calc(var(--r) * 1deg));
+  transition: transform .55s cubic-bezier(.2,.8,.2,1), box-shadow .3s; z-index: var(--z); }
+.deck a img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.deck a .tag { position: absolute; left: 10px; bottom: 10px; font: 700 11px/1 var(--mono); letter-spacing: .08em; padding: 6px 8px; border-radius: 4px;
+  background: rgba(10,14,20,.78); color: #fff; opacity: 0; transition: opacity .25s; }
+.deck:hover a { transform: translate(calc(var(--fx) * 1px), calc(var(--fy) * 1px)) rotate(calc(var(--fr) * 1deg)); }
+.deck a:hover { z-index: 20; box-shadow: 0 0 0 3px var(--accent), var(--shadow-lift); }
+.deck:hover a .tag { opacity: 1; }
+.deck-hint { position: absolute; bottom: 0; left: 0; right: 0; text-align: center; font: 500 12.5px/1 var(--mono); color: var(--muted); letter-spacing: .04em; }
+
+/* ---------- Chooser ---------- */
+.chooser { padding-block: 34px 10px; }
+.chooser .wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 26px 28px; box-shadow: var(--shadow);
+  display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px; align-items: center; }
+h2 { font: 700 clamp(26px, 3vw, 36px)/1.05 var(--display); letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+.chooser p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+.roles { display: flex; flex-wrap: wrap; gap: 10px; }
+.role { font: 600 15px/1 var(--body); padding: 12px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; transition: background .2s, border-color .2s; }
+.role:hover { border-color: var(--accent); }
+.role[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.route { grid-column: 1 / -1; font-size: 15px; color: var(--muted); min-height: 1.6em; margin: -6px 0 0; }
+.route b { color: var(--ink); }
+
+/* ---------- Volumes ---------- */
+.vols { padding-block: 36px 64px; }
+.vols-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; }
+.vols-head p { margin: 0; color: var(--muted); max-width: 36em; }
+.trunkline { position: relative; }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.train-head { margin-top: 48px; }
+.vol .sessions { font-weight: 700; color: var(--ink); }
+.vol { --vc: var(--c3); position: relative; display: flex; flex-direction: column; background: var(--surface); border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--line); transition: transform .25s, box-shadow .25s, opacity .3s, filter .3s; }
+.vol:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.vol .cover { position: relative; display: block; aspect-ratio: 4 / 3.4; overflow: hidden; background: var(--soft); border-bottom: 4px solid var(--vc); }
+.vol .cover img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.vol:hover .cover img { transform: scale(1.04); }
+.vol .no { position: absolute; bottom: 10px; left: 10px; font: 700 12px/1 var(--mono); letter-spacing: .06em; padding: 7px 9px; border-radius: 5px; background: var(--vc); color: #0B0F14; }
+.vol .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.vol .topic { font: 700 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.vol h3 { font: 700 21px/1.12 var(--display); letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.vol h3 a { text-decoration: none; }
+.vol h3 a::after { content: ""; position: absolute; inset: 0; }
+.vol p { margin: 0; font-size: 14.5px; color: var(--muted); }
+.vol .meta { margin-top: auto; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px solid var(--line); font: 500 12.5px/1.3 var(--mono); color: var(--muted); }
+.vol .view { position: relative; z-index: 2; font: 600 13px/1 var(--body); color: var(--accent); background: none; border: 0; padding: 6px 0; cursor: pointer; white-space: nowrap; }
+.vol .view:hover { text-decoration: underline; }
+.grid.filtered .vol:not(.hit) { opacity: .35; filter: grayscale(.8); }
+.grid.filtered .vol.hit { box-shadow: 0 0 0 2px var(--vc), var(--shadow); }
+.vol[data-c="1"] { --vc: var(--c1); } .vol[data-c="2"] { --vc: var(--c2); } .vol[data-c="3"] { --vc: var(--c3); } .vol[data-c="4"] { --vc: var(--c4); }
+
+/* ---------- Map strip ---------- */
+.map { padding-block: 0 64px; }
+.map .wrap { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
+.layer { padding: 22px 22px 6px 0; border-right: 1px solid var(--line); }
+.layer + .layer { padding-left: 22px; }
+.layer:last-child { border-right: 0; }
+.layer .lk { font: 700 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; display: flex; gap: 8px; align-items: center; }
+.layer .lk::before { content: ""; width: 10px; height: 10px; background: var(--lc); }
+.layer h4 { font: 700 20px/1.15 var(--display); margin: 10px 0 6px; }
+.layer p { margin: 0 0 10px; font-size: 14.5px; color: var(--muted); }
+.layer .links { display: flex; flex-wrap: wrap; gap: 6px; }
+.layer .links a { font: 600 12.5px/1 var(--mono); text-decoration: none; padding: 6px 8px; border-radius: 4px; background: var(--soft); }
+.layer .links a:hover { background: var(--accent); color: var(--accent-ink); }
+
+/* ---------- Footer ---------- */
+footer { border-top: 1px solid var(--line); background: var(--surface); padding-block: 28px 36px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; align-items: center; }
+.author { display: flex; align-items: center; gap: 14px; }
+.mark { width: 46px; height: 46px; display: grid; place-items: center; flex: none; border-radius: 50%; background: var(--ink); color: var(--bg); font: 800 17px/1 var(--display); letter-spacing: -.02em; }
+.author b { display: block; font: 700 18px/1.2 var(--display); }
+.author a { color: var(--accent); font-weight: 600; text-decoration: none; font-size: 14.5px; }
+.author a:hover { text-decoration: underline; }
+.fine { font-size: 13px; color: var(--muted); max-width: 40em; }
+
+/* ---------- Lightbox ---------- */
+dialog { border: 0; padding: 0; background: transparent; max-width: min(92vw, 560px); width: 100%; }
+dialog::backdrop { background: rgba(8,11,16,.8); }
+dialog img { width: 100%; height: auto; max-height: 82vh; object-fit: contain; border-radius: 10px; display: block; box-shadow: var(--shadow-lift); }
+.dbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px; color: #fff; font-size: 14px; }
+.dbar button { font: 600 14px/1 var(--body); padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,.4); background: transparent; color: #fff; cursor: pointer; }
+.dbar a { color: #9CD0FF; font-weight: 600; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .map .wrap { grid-template-columns: repeat(3, minmax(0, 1fr)); } .layer:nth-child(3) { border-right: 0; } .layer:nth-child(4) { padding-left: 0; } .layer:nth-child(n+4) { border-top: 1px solid var(--line); } }
+@media (max-width: 700px) { .grid.three { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); }
+  .deck { height: 420px; }
+  .deck a { width: 200px; margin: -125px 0 0 -100px; }
+  .chooser .wrap { grid-template-columns: minmax(0, 1fr); }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .map .wrap { grid-template-columns: minmax(0, 1fr); }
+  .layer, .layer + .layer { padding: 18px 0 6px; border-right: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 560px) {
+  .hero { padding-block: 36px 24px; }
+  .deck { height: 330px; }
+  .deck a { width: 150px; margin: -94px 0 0 -75px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .map .wrap { grid-template-columns: minmax(0, 1fr); }
+  .layer, .layer + .layer { padding: 18px 0 6px; border-right: 0; border-top: 1px solid var(--line); }
+  .chooser .wrap { padding: 22px 18px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+@media (prefers-reduced-motion: no-preference) {
+  .deck a { animation: deal .9s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * 70ms); }
+  @keyframes deal { from { transform: translate(0, 40px) rotate(0deg); } }
+}
+</style>
+
+<div class="stripe" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<header class="hero band">
+  <div class="wrap">
+    <div>
+      <div class="kicker">Eight guides · three training plans · October 2026</div>
+      <h1><span class="owner">Jason Baxter’s</span>Microsoft <span class="ai">AI</span> Field&nbsp;Guide</h1>
+      <p class="standfirst">Visual decision maps for people who use Microsoft AI at work. Pick a guide, tap any box, and see <b>when to use it, when to use something else</b>, and where to learn more.</p>
+      <div class="cta">
+        <a class="btn primary" href="#guides">Browse the guides <span aria-hidden="true">↓</span></a>
+        <a class="btn ghost" href="microsoft-tech-family-tree.html">Start with the cloud map</a>
+        <a class="btn ghost" href="sources.html">All 138 sources</a>
+      </div>
+      <div class="stats" aria-label="What the series covers">
+        <div class="stat"><b>11</b><span>guides and plans</span></div>
+        <div class="stat"><b>175</b><span>tools, features and models mapped</span></div>
+        <div class="stat"><b>19</b><span>training sessions</span></div>
+      </div>
+    </div>
+    <div class="deck" id="deck" aria-label="Guide covers"></div>
+  </div>
+</header>
+
+<section class="chooser band" aria-labelledby="chooser-h">
+  <div class="wrap">
+    <div>
+      <h2 id="chooser-h">Where should you start?</h2>
+      <p>Pick your role and the guides that matter most to you light up.</p>
+    </div>
+    <div class="roles" id="roles" role="group" aria-label="Choose your role"></div>
+    <p class="route" id="route" aria-live="polite">Or browse everything below.</p>
+  </div>
+</section>
+
+<main class="vols band" id="guides">
+  <div class="wrap">
+    <div class="vols-head">
+      <h2>The guides</h2>
+      <p>Each guide works like a family tree: start from the job you need done, then follow the branches to the right tool.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="vols-head train-head">
+      <h2>Training plans</h2>
+      <p>Short, hands-on plans for each audience. Every session swaps an old habit for the AI way of working, with a 10-minute exercise and a clear finish line.</p>
+    </div>
+    <div class="grid three" id="train"></div>
+  </div>
+</main>
+
+<section class="map band" aria-label="How the guides fit together">
+  <div class="wrap" id="layers"></div>
+</section>
+
+<footer class="band">
+  <div class="wrap">
+    <div class="author">
+      <span class="mark" aria-hidden="true">JB</span>
+      <div><b>Created by Jason Baxter</b><a href="https://www.linkedin.com/in/jasonwbaxterza" target="_blank" rel="noopener">linkedin.com/in/jasonwbaxterza ↗</a></div>
+    </div>
+    <p class="fine">Based on Microsoft Learn and Microsoft Support as of October 2026. Features roll out by region, platform and licence, so check with your admin before you rely on one. This is a personal guide and not an official Microsoft publication. <a href="sources.html" style="color:var(--accent);font-weight:600">See every source and reference →</a></p>
+  </div>
+</footer>
+
+<dialog id="lb" aria-label="Guide image">
+  <img id="lbImg" alt="">
+  <div class="dbar"><span id="lbCap"></span><span style="display:flex;gap:12px;align-items:center"><a id="lbLink" href="#">Open guide →</a><button id="lbClose" type="button">Close</button></span></div>
+</dialog>
+
+<script>
+const G = [
+  { n: 1, c: 1, topic: "The Microsoft Cloud", title: "The Microsoft Cloud on one map", text: "Copilot, Azure AI, Power Platform, data, security and more, laid out as one family tree.", meta: "8 families · 49 technologies", href: "microsoft-tech-family-tree.html", img: "img/01-cloud-map.jpg" },
+  { n: 2, c: 2, topic: "Business goals", title: "Start with the goal, not the tool", text: "Six business goals in plain language, and how much effort each tool takes.", meta: "6 goals · 13 tools", href: "microsoft-ai-business-guide.html", img: "img/02-business-goals.jpg" },
+  { n: 3, c: 3, topic: "Copilot Premium", title: "The right Copilot for every job", text: "Chat, Cowork, agents, skills, plugins, Code and Autopilots, and when to use each.", meta: "6 jobs · 8 ways to work", href: "microsoft-copilot-premium-guide.html", img: "img/03-copilot-premium.jpg" },
+  { n: 4, c: 4, topic: "Microsoft 365", title: "Sixteen apps, sorted by the job you need done", text: "What each app is for, who it reaches, and when to pick another.", meta: "6 jobs · 16 apps", href: "microsoft-365-apps-guide.html", img: "img/04-microsoft-365.jpg" },
+  { n: 5, c: 1, topic: "AI models", title: "How to pick the right AI model in Copilot", text: "OpenAI, Anthropic, xAI and Mistral: what each does best and where to find it.", meta: "4 providers · 15 choices", href: "microsoft-copilot-model-guide.html", img: "img/05-ai-models.jpg" },
+  { n: 6, c: 2, topic: "Copilot in the apps", title: "What Copilot does in every Microsoft 365 app", text: "Outlook, Teams, Word, Excel, PowerPoint, OneNote, OneDrive, SharePoint and Planner.", meta: "9 apps · 41 capabilities", href: "microsoft-copilot-in-the-apps.html", img: "img/06-copilot-in-the-apps.jpg" },
+  { n: 7, c: 3, topic: "Devices", title: "iPad, Cloud PC or Copilot+ PC? Choose by where the AI runs", text: "Which device fits which worker, and the AI each one adds.", meta: "3 devices · 14 capabilities", href: "microsoft-devices-ai-guide.html", img: "img/07-devices.jpg" },
+  { n: 8, c: 4, topic: "Platforms", title: "Copilot on every platform: what works where", text: "Windows, Mac, iPad, iPhone, Android and Linux, feature by feature.", meta: "19 features · 6 platforms", href: "microsoft-devices-ai-guide.html#platforms", img: "img/08-platforms.jpg" },
+  { n: 9, c: 3, train: true, topic: "Training: business users", title: "Seven work habits to swap for AI ones", text: "Agents and tool connections, digital filing, Markdown, computer use, skills, chatting with documents and editing with Copilot.", meta: "7 sessions · 3.5 hours", href: "microsoft-training-business-users.html", img: "img/09-business-users.jpg" },
+  { n: 10, c: 1, train: true, topic: "Training: IT and AI admins", title: "Get the platform ready before the people arrive", text: "Agent and MCP governance, oversharing, platform readiness, guardrails, cost control and trusted data.", meta: "6 sessions · 6 hours", href: "microsoft-training-it-admins.html", img: "img/10-it-admins.jpg" },
+  { n: 11, c: 4, train: true, topic: "Training: change managers", title: "It’s not a training plan. It’s a work redesign.", text: "Reimagine and re-engineer the work, measure real usage, track value against cost, and create the jobs of the future.", meta: "6 sessions · 90 days", href: "microsoft-training-change-managers.html", img: "img/11-change-managers.jpg" }
+];
+const ROLES = [
+  { id: "leader", label: "Business leader", picks: [2, 3, 4, 11], say: "Start with <b>No. 2</b> to match goals to tools, then <b>No. 3</b>, <b>No. 4</b> and the change plan in <b>No. 11</b>." },
+  { id: "user", label: "Everyday Copilot user", picks: [9, 6, 3, 5], say: "Start with the training plan in <b>No. 9</b>, then <b>No. 6</b> for each app, <b>No. 3</b> and <b>No. 5</b>." },
+  { id: "it", label: "IT and device decisions", picks: [10, 7, 8, 1], say: "Start with the admin plan in <b>No. 10</b>, then <b>No. 7</b> for devices, <b>No. 8</b> for platform support and <b>No. 1</b>." },
+  { id: "builder", label: "Builder or architect", picks: [1, 5, 3, 10], say: "Start with <b>No. 1</b> for the full cloud map, then <b>No. 5</b> for models, <b>No. 3</b> for agents and <b>No. 10</b> for governance." }
+];
+const LAYERS = [
+  { k: "Strategy", lc: "var(--c1)", h: "Know the landscape", p: "See the whole Microsoft Cloud, then work back from business goals.", l: [1, 2] },
+  { k: "Copilot", lc: "var(--c2)", h: "Work with Copilot", p: "Pick the right mode, the right model, and what to ask for in each app.", l: [3, 5, 6] },
+  { k: "Apps", lc: "var(--c3)", h: "Choose the app", p: "Match the job to the Microsoft 365 app built for it.", l: [4] },
+  { k: "Devices", lc: "var(--c4)", h: "Equip your people", p: "Choose devices by where the AI runs, and check platform support.", l: [7, 8] },
+  { k: "Training", lc: "var(--accent)", h: "Bring people with you", p: "Plans for business users, IT and AI admins, and change managers.", l: [9, 10, 11] }
+];
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+
+// Fanned deck: resting stack and spread positions
+const W = () => Math.min(window.innerWidth, 1240);
+function deck() {
+  const small = window.innerWidth < 560, mid = window.innerWidth < 900;
+  const k = small ? .55 : mid ? .78 : 1;
+  $("deck").innerHTML = G.map((g, i) => {
+    const t = i - (G.length - 1) / 2;
+    const x = t * 22 * k, y = Math.abs(t) * 6 * k, r = t * 4;
+    const fx = t * 62 * k, fy = Math.abs(t) * 14 * k - 10, fr = t * 6;
+    return `<a href="${g.href}" style="--i:${i};--x:${x};--y:${y};--r:${r};--fx:${fx};--fy:${fy};--fr:${fr};--z:${i}" aria-label="No. ${g.n}: ${g.title}">
+      <img src="${g.img}" alt="" loading="${i > 3 ? "lazy" : "eager"}"><span class="tag">No. ${pad(g.n)}</span></a>`;
+  }).join("") + `<div class="deck-hint">Hover to fan the deck · tap a cover to open it</div>`;
+}
+
+function card(g) { return `
+    <article class="vol" data-c="${g.c}" data-n="${g.n}">
+      <a class="cover" href="${g.href}" tabindex="-1" aria-hidden="true"><img src="${g.img}" alt="" loading="lazy"><span class="no">No. ${pad(g.n)}</span></a>
+      <div class="body">
+        <span class="topic">${g.topic}</span>
+        <h3><a href="${g.href}">${g.title}</a></h3>
+        <p>${g.text}</p>
+        <div class="meta"><span>${g.meta}</span>${g.train ? `<span class="sessions">Training plan</span>` : `<button class="view" type="button" data-n="${g.n}">View image</button>`}</div>
+      </div>
+    </article>`; }
+function grid() {
+  $("grid").innerHTML = G.filter(g => !g.train).map(card).join("");
+  $("train").innerHTML = G.filter(g => g.train).map(card).join("");
+}
+const grids = () => document.querySelectorAll(".grid");
+
+function roles() {
+  $("roles").innerHTML = ROLES.map(r => `<button class="role" type="button" id="role-${r.id}" aria-pressed="false" data-id="${r.id}">${r.label}</button>`).join("");
+  $("roles").addEventListener("click", e => {
+    const b = e.target.closest(".role"); if (!b) return;
+    const on = b.getAttribute("aria-pressed") !== "true";
+    document.querySelectorAll(".role").forEach(x => x.setAttribute("aria-pressed", "false"));
+    if (!on) { grids().forEach(g => { g.classList.remove("filtered"); g.querySelectorAll(".vol").forEach(v => v.classList.remove("hit")); }); $("route").innerHTML = "Or browse everything below."; save(""); return; }
+    b.setAttribute("aria-pressed", "true");
+    apply(b.dataset.id, true);
+  });
+}
+function apply(id, scroll) {
+  const r = ROLES.find(x => x.id === id); if (!r) return;
+  $("role-" + id).setAttribute("aria-pressed", "true");
+  grids().forEach(g => { g.classList.add("filtered"); g.querySelectorAll(".vol").forEach(v => v.classList.toggle("hit", r.picks.includes(+v.dataset.n))); });
+  $("route").innerHTML = r.say;
+  save(id);
+  if (scroll) $("guides").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+}
+function save(v) { try { localStorage.setItem("fg-role", v); } catch (e) {} }
+
+function layers() {
+  $("layers").innerHTML = LAYERS.map(l => `
+    <div class="layer" style="--lc:${l.lc}"><span class="lk">${l.k}</span><h4>${l.h}</h4><p>${l.p}</p>
+    <div class="links">${l.l.map(n => { const g = G.find(x => x.n === n); return `<a href="${g.href}">No. ${pad(n)}</a>`; }).join("")}</div></div>`).join("");
+}
+
+// Lightbox
+const lb = $("lb");
+document.addEventListener("click", e => {
+  const v = e.target.closest(".view"); if (!v) return;
+  const g = G.find(x => x.n === +v.dataset.n);
+  $("lbImg").src = g.img; $("lbImg").alt = `Social image for No. ${g.n}: ${g.title}`;
+  $("lbCap").textContent = `No. ${pad(g.n)} · ${g.topic}`; $("lbLink").href = g.href;
+  if (lb.showModal) lb.showModal(); else lb.setAttribute("open", "");
+});
+$("lbClose").addEventListener("click", () => lb.close ? lb.close() : lb.removeAttribute("open"));
+lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
+
+deck(); grid(); roles(); layers();
+let last = window.innerWidth;
+addEventListener("resize", () => { const w = window.innerWidth; if ((w < 560) !== (last < 560) || (w < 900) !== (last < 900)) deck(); last = w; });
+try { const r = localStorage.getItem("fg-role"); if (r) apply(r, false); } catch (e) {}
+</script>
+
+</body>
+</html>

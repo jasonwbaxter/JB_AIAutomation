@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Microsoft Cloud Map | Jason Baxter’s Microsoft AI Field Guide</title>
+<style>
+  :root {
+    --bg: #F3F2F1;
+    --card: #FFFFFF;
+    --text: #201F1E;
+    --muted: #605E5C;
+    --line: #C8C6C4;
+    --border: #E1DFDD;
+    --accent: #0078D4;
+    --accent-hover: #106EBE;
+    --good: #107C10;
+    --bad: #A4262C;
+    --shadow: 0 1.6px 3.6px rgba(0,0,0,.13), 0 .3px .9px rgba(0,0,0,.11);
+    --shadow-lg: 0 6.4px 14.4px rgba(0,0,0,.13), 0 1.2px 3.6px rgba(0,0,0,.11);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1B1A19;
+      --card: #252423;
+      --text: #F3F2F1;
+      --muted: #C8C6C4;
+      --line: #605E5C;
+      --border: #3B3A39;
+      --accent: #2899F5;
+      --accent-hover: #4BA9F7;
+      --good: #6CCB5F;
+      --bad: #F1707B;
+      --shadow: 0 1.6px 3.6px rgba(0,0,0,.4);
+      --shadow-lg: 0 6.4px 14.4px rgba(0,0,0,.5);
+    }
+    .fam { --fc: var(--cd) !important; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; }
+  a { color: var(--accent); }
+
+  /* ---------- Header ---------- */
+  .stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; }
+  .stripe span:nth-child(1) { background: #F25022; }
+  .stripe span:nth-child(2) { background: #7FBA00; }
+  .stripe span:nth-child(3) { background: #00A4EF; }
+  .stripe span:nth-child(4) { background: #FFB900; }
+  header.top {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px 16px;
+  }
+  .wrap { max-width: 1440px; margin: 0 auto; }
+  .brandline { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: .02em; margin: 0 0 4px; }
+  h1 {
+    font-family: "Segoe UI Variable Display", "Segoe UI", -apple-system, sans-serif;
+    font-weight: 600; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.15; margin: 0 0 6px;
+  }
+  .lede { color: var(--muted); margin: 0 0 16px; max-width: 760px; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .search {
+    position: relative; flex: 1 1 320px; max-width: 520px;
+  }
+  .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--muted); }
+  .search input {
+    width: 100%; height: 36px; padding: 0 34px 0 34px;
+    border: 1px solid var(--line); border-bottom: 2px solid var(--muted); border-radius: 4px;
+    background: var(--card); color: var(--text); font: inherit;
+  }
+  .search input:focus { outline: none; border-bottom-color: var(--accent); }
+  .search .clear {
+    position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    border: 0; background: transparent; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; color: var(--muted); display: none;
+  }
+  .search .clear:hover { background: var(--bg); }
+  .count { font-size: 13px; color: var(--muted); min-width: 90px; }
+  .btn {
+    height: 32px; padding: 0 12px; border-radius: 4px; border: 1px solid var(--line);
+    background: var(--card); cursor: pointer; font-weight: 600; font-size: 14px;
+  }
+  .btn:hover { background: var(--bg); }
+  .picks { margin-top: 14px; }
+  .picks-label { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--bg); border-radius: 16px;
+    padding: 5px 12px; font-size: 13px; cursor: pointer; transition: background .15s, border-color .15s;
+  }
+  .chip:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+  .chip:focus-visible, .node:focus-visible, .fam-head:focus-visible, .btn:focus-visible, .alt:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  /* ---------- Tree ---------- */
+  main { padding: 28px 24px 64px; }
+  #tree { position: relative; }
+  .trunk { position: absolute; width: 2px; background: var(--line); z-index: 0; }
+  .root {
+    position: relative; z-index: 1;
+    width: max-content; max-width: 100%; margin: 0 auto;
+    background: var(--accent); color: #fff; border-radius: 8px; box-shadow: var(--shadow-lg);
+    padding: 14px 22px; text-align: center;
+  }
+  .root strong { display: block; font-size: 18px; font-weight: 600; }
+  .root span { font-size: 13px; opacity: .9; }
+  .gen {
+    position: relative; z-index: 1;
+    display: grid; gap: 24px; padding-top: 36px; margin-top: 36px;
+  }
+  .gen:first-of-type { margin-top: 0; }
+  .gen::before { /* sibling bus line */
+    content: ""; position: absolute; top: 0; height: 2px; background: var(--line);
+    left: var(--bus-inset); right: var(--bus-inset);
+  }
+  .fam {
+    --fc: var(--c);
+    position: relative; background: var(--card); border-radius: 8px; box-shadow: var(--shadow);
+    border-top: 4px solid var(--fc); align-self: start;
+  }
+  .fam::before { /* stub to bus */
+    content: ""; position: absolute; left: 50%; top: -40px; width: 2px; height: 36px; background: var(--line);
+  }
+  .fam-head {
+    display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left;
+    background: color-mix(in srgb, var(--fc) 9%, var(--card)); border: 0; cursor: pointer;
+    padding: 12px 14px; border-radius: 0;
+  }
+  .fam-head .dot { width: 10px; height: 10px; border-radius: 2px; background: var(--fc); flex: none; margin-top: 6px; }
+  .fam-head .txt { flex: 1; min-width: 0; }
+  .fam-head .name { display: block; font-weight: 600; font-size: 16px; }
+  .fam-head .tag { display: block; font-size: 13px; color: var(--muted); }
+  .fam-head .meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); flex: none; margin-top: 3px; }
+  .chev { width: 14px; height: 14px; transition: transform .2s; }
+  .fam.collapsed .chev { transform: rotate(-90deg); }
+  .kids { list-style: none; margin: 0; padding: 10px 12px 14px 28px; position: relative; }
+  .fam.collapsed .kids { display: none; }
+  .kids::before { /* family rail */
+    content: ""; position: absolute; left: 18px; top: 0; bottom: 34px; width: 2px;
+    background: color-mix(in srgb, var(--fc) 45%, var(--line));
+  }
+  .kids li { position: relative; margin-top: 6px; }
+  .kids li::before { /* branch tick */
+    content: ""; position: absolute; left: -10px; top: 21px; width: 10px; height: 2px;
+    background: color-mix(in srgb, var(--fc) 45%, var(--line));
+  }
+  .node {
+    display: block; width: 100%; text-align: left; cursor: pointer;
+    background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px 10px; transition: border-color .15s, box-shadow .15s, opacity .2s, background .15s;
+  }
+  .node:hover { border-color: var(--fc); box-shadow: var(--shadow); }
+  .node .n { display: block; font-weight: 600; font-size: 14px; }
+  .node .w {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 12.5px; color: var(--muted); margin-top: 1px;
+  }
+  .node.sel { border-color: var(--fc); background: color-mix(in srgb, var(--fc) 10%, var(--card)); box-shadow: 0 0 0 1px var(--fc); }
+  .node.dim { opacity: .28; }
+  .node.hit { border-color: var(--fc); }
+  .fam.dim .fam-head { opacity: .45; }
+
+  /* Rail mode (narrow screens) */
+  #tree.rail .root { margin: 0; text-align: left; }
+  #tree.rail .gen { padding-top: 0; padding-left: 40px; margin-top: 20px; }
+  #tree.rail .gen::before { left: 20px; right: auto; width: 20px; top: 28px; }
+  #tree.rail .fam::before { display: none; }
+
+  footer.note { color: var(--muted); font-size: 12.5px; text-align: center; padding: 0 24px 32px; }
+
+  /* ---------- Detail panel ---------- */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.32); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 40; }
+  .panel {
+    --fc: var(--accent);
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100%);
+    background: var(--card); box-shadow: var(--shadow-lg); z-index: 50;
+    transform: translateX(105%); transition: transform .25s cubic-bezier(.1,.9,.2,1);
+    display: flex; flex-direction: column; border-left: 4px solid var(--fc);
+  }
+  body.open .panel { transform: none; }
+  body.open .scrim { opacity: 1; pointer-events: auto; }
+  .panel-top { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px 0; }
+  .pill {
+    font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 12px;
+    background: color-mix(in srgb, var(--fc) 14%, var(--card)); color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--fc) 40%, var(--card));
+  }
+  .x { border: 0; background: transparent; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; color: var(--muted); }
+  .x:hover { background: var(--bg); }
+  .panel-body { padding: 8px 22px 28px; overflow-y: auto; }
+  .panel h2 { font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif; font-size: 24px; font-weight: 600; margin: 8px 0 6px; line-height: 1.2; }
+  .panel .what { color: var(--muted); margin: 0 0 18px; }
+  .panel h3 { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; margin: 18px 0 8px; text-transform: uppercase; letter-spacing: .04em; }
+  .panel h3.use { color: var(--good); }
+  .panel h3.avoid { color: var(--bad); }
+  .panel h3 svg { width: 18px; height: 18px; }
+  .panel ul { list-style: none; margin: 0; padding: 0; }
+  .panel li { padding: 8px 0 8px 14px; border-left: 3px solid var(--border); margin-bottom: 6px; }
+  .panel li.u { border-left-color: color-mix(in srgb, var(--good) 60%, var(--card)); }
+  .panel li.a { border-left-color: color-mix(in srgb, var(--bad) 60%, var(--card)); }
+  .alt {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;
+    border: 1px solid var(--line); background: var(--bg); border-radius: 4px;
+    padding: 3px 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .alt:hover { border-color: var(--accent); color: var(--accent); }
+  .learn {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 22px;
+    background: var(--accent); color: #fff; text-decoration: none; font-weight: 600;
+    padding: 9px 16px; border-radius: 4px;
+  }
+  .learn:hover { background: var(--accent-hover); }
+  @media (max-width: 699px) {
+    .panel { top: auto; left: 0; width: 100%; max-height: 82vh; border-left: 0; border-top: 4px solid var(--fc); border-radius: 12px 12px 0 0; transform: translateY(105%); }
+    header.top { padding: 16px; }
+    main { padding: 20px 16px 48px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<a href="index.html" style="display:flex;align-items:center;gap:8px;padding:10px max(16px,env(safe-area-inset-left,0px));font:600 13px/1.2 'Segoe UI',system-ui,sans-serif;text-decoration:none;color:var(--accent,#0078D4);background:var(--card,#fff);border-bottom:1px solid var(--border,#E1DFDD)">&larr; Jason Baxter’s Microsoft AI Field Guide <span style="color:var(--muted,#605E5C);font-weight:400">&middot; all guides</span></a>
+<div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<header class="top">
+  <div class="wrap">
+    <p class="brandline">Jason Baxter’s Microsoft AI Field Guide · No. 1 · The Microsoft Cloud</p>
+    <h1>The Microsoft Cloud on one map</h1>
+    <p class="lede">Explore the Microsoft Cloud as a family tree. Tap any technology to see when it fits, when to pick something else, and where to learn more.</p>
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5" stroke-linecap="round"/></svg>
+        <input id="q" type="search" placeholder="Search — try “invoices”, “chatbot”, “dashboard”" aria-label="Search technologies" autocomplete="off">
+        <button class="clear" id="clear" aria-label="Clear search">✕</button>
+      </div>
+      <span class="count" id="count" aria-live="polite"></span>
+      <button class="btn" id="toggleAll">Collapse all</button>
+    </div>
+    <div class="picks">
+      <p class="picks-label">Quick picks — I want to…</p>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+</header>
+
+<main><div class="wrap"><div id="tree"></div></div></main>
+<footer class="note">Product names and positioning follow Microsoft Learn as of October 2026. Confirm licensing and regional availability with your Microsoft account team.</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="false" aria-labelledby="pName">
+  <div class="panel-top">
+    <span class="pill" id="pFam"></span>
+    <button class="x" id="pClose" aria-label="Close details">✕</button>
+  </div>
+  <div class="panel-body" id="pBody"></div>
+</aside>
+
+<script>
+const L = "https://learn.microsoft.com/";
+const FAMILIES = [
+  { id: "copilot", name: "Copilot & Agents", tag: "AI that works alongside people in Microsoft 365", c: "#0078D4", cd: "#2899F5", nodes: [
+    { id: "copilot-chat", name: "Microsoft 365 Copilot Chat", what: "Secure, web-grounded AI chat included with Microsoft 365, with enterprise data protection.",
+      use: ["Everyone needs a safe AI assistant for drafting, summarising and research today.", "You want enterprise data protection without buying a Copilot licence for every user.", "You want to trial agents on pay-as-you-go before committing to seats."],
+      avoid: [["Answers must draw on your own email, meetings, chats and files.", "m365-copilot"], ["A department needs a governed agent connected to business systems.", "copilot-studio"]],
+      learn: L + "copilot/overview" },
+    { id: "m365-copilot", name: "Microsoft 365 Copilot", what: "AI inside Word, Excel, PowerPoint, Outlook and Teams, grounded in your work data through Microsoft Graph and your existing permissions.",
+      use: ["People lose hours to email, meetings, documents and catch-ups.", "Copilot must reason over tenant data (mail, files, chats) and respect existing permissions.", "You want built-in agents such as Researcher and Analyst."],
+      avoid: [["Your SharePoint permissions overshare sensitive content — fix that first.", "purview"], ["You need a bespoke, multi-step process tied to business systems.", "copilot-studio"]],
+      learn: L + "copilot/microsoft-365/microsoft-365-copilot-overview" },
+    { id: "researcher-analyst", name: "Researcher & Analyst agents", what: "Reasoning agents built into Microsoft 365 Copilot: Researcher produces deep multi-source reports; Analyst turns raw data into insight using Python.",
+      use: ["You need a structured report that combines web and work sources.", "You want to analyse a spreadsheet or raw dataset without writing code.", "The question takes several steps of reasoning, not a single prompt."],
+      avoid: [["You need a quick answer or a draft in an app you already have open.", "m365-copilot"], ["You need a repeatable dashboard the whole team checks weekly.", "power-bi"]],
+      learn: L + "copilot/microsoft-365/microsoft-365-copilot-overview" },
+    { id: "agent-builder", name: "Agent Builder", what: "Describe an agent in plain language inside Microsoft 365 Copilot and ground it on SharePoint sites, files and emails. No code.",
+      use: ["You want a Q&A agent for yourself or a small team.", "The knowledge already lives in Microsoft 365 (SharePoint, OneDrive, Teams, Outlook).", "You want something working in minutes, not weeks."],
+      avoid: [["The agent needs multi-step workflows, approvals or connections to external systems.", "copilot-studio"], ["You must publish the agent org-wide or to customers with lifecycle controls.", "copilot-studio"]],
+      learn: L + "microsoft-365/copilot/extensibility/agent-builder" },
+    { id: "copilot-studio", name: "Microsoft Copilot Studio", what: "Low-code platform to build, publish and govern agents for departments, the whole organisation or external customers.",
+      use: ["The audience is a department, the whole company or customers.", "The agent runs multi-step logic, approvals and connectors to CRM, ERP or ticketing systems.", "You want autonomous agents that react to events, plus dev/test/prod lifecycle management."],
+      avoid: [["You only need a lightweight personal or team Q&A agent.", "agent-builder"], ["Developers need full code control, custom orchestration or their own models.", "foundry-agents"]],
+      learn: L + "microsoft-copilot-studio/fundamentals-what-is-copilot-studio" },
+    { id: "agent-365", name: "Microsoft Agent 365", what: "The control plane to observe, govern and secure every agent in the organisation — Microsoft-built, custom and third-party.",
+      use: ["Agents now sprawl across Copilot Studio, Foundry and partner platforms.", "IT needs one registry with owners, lifecycle and access policies for agents.", "Security wants Entra, Purview and Defender protection extended to agents."],
+      avoid: [["You want to build an agent, not manage a fleet of them.", "copilot-studio"], ["You need to secure people and devices rather than agents.", "entra"]],
+      learn: L + "microsoft-agent-365/overview" }
+  ]},
+  { id: "foundry", name: "AI Platform", tag: "Build custom AI apps and agents on Azure", c: "#5C2D91", cd: "#B696E8", nodes: [
+    { id: "foundry", name: "Microsoft Foundry", what: "Azure’s unified platform for models, agents, tools, evaluation and governance (formerly Azure AI Foundry).",
+      use: ["Developers build custom AI apps or agents into your own products.", "You want a choice of models from Microsoft, OpenAI, Anthropic, Meta and others.", "You need tracing, evaluations, network isolation and Azure policy in one place."],
+      avoid: [["Business users simply need AI inside the apps they use every day.", "m365-copilot"], ["Makers want to build agents without writing code.", "copilot-studio"]],
+      learn: L + "azure/foundry/what-is-foundry" },
+    { id: "foundry-models", name: "Foundry Models", what: "A catalog of 10,000+ models to compare, benchmark, fine-tune and deploy.",
+      use: ["You need to pick the right model for cost, speed and quality.", "You want to compare models side by side on your own data.", "You plan to fine-tune or bring your own model."],
+      avoid: [["You just want to chat with AI at work.", "copilot-chat"], ["Data must stay on the device with no cloud calls.", "foundry-local"]],
+      learn: L + "azure/foundry/concepts/foundry-models-overview" },
+    { id: "foundry-agents", name: "Foundry Agent Service", what: "Run declarative prompt agents or host your own code-first agents (Agent Framework, LangGraph, and more) with managed scale, identity and observability.",
+      use: ["The agent needs custom orchestration, precise business rules or multi-agent design.", "You embed agents in your own app, website or backend process.", "Your team writes code and wants full control of the runtime."],
+      avoid: [["You have no developers on the team.", "copilot-studio"], ["The agent only answers questions from Microsoft 365 content.", "agent-builder"]],
+      learn: L + "azure/foundry/agents/overview" },
+    { id: "foundry-tools", name: "Foundry Tools", what: "Prebuilt AI APIs for speech, vision, language, translation, document processing and content safety (formerly Azure AI Services).",
+      use: ["Your app must transcribe calls, translate content or read documents at scale.", "You need OCR and field extraction from forms inside custom code.", "You need content safety filters on AI inputs and outputs."],
+      avoid: [["A maker wants document extraction inside a flow without code.", "ai-builder"], ["You want a full agent, not a single AI capability.", "foundry-agents"]],
+      learn: L + "azure/ai-services/what-are-ai-services" },
+    { id: "ai-search", name: "Azure AI Search", what: "Enterprise retrieval engine with vector, keyword and hybrid search that grounds custom AI apps in your private data (RAG).",
+      use: ["Your custom AI app must answer from large private document stores.", "You need hybrid or vector search with security trimming.", "Data lives outside Microsoft 365 (databases, blob storage, line-of-business systems)."],
+      avoid: [["Content already sits in SharePoint and users work in Copilot.", "m365-copilot"], ["You need analytics, not search.", "fabric"]],
+      learn: L + "azure/search/search-what-is-azure-search" },
+    { id: "azure-ml", name: "Azure Machine Learning", what: "Platform to train, track and operationalise predictive machine learning models with MLOps.",
+      use: ["Data scientists build forecasting, churn, fraud or pricing models.", "You need reproducible training pipelines and model monitoring.", "You train custom models from scratch."],
+      avoid: [["You build generative AI apps or agents.", "foundry"], ["A maker needs a simple prediction inside an app.", "ai-builder"]],
+      learn: L + "azure/machine-learning/overview-what-is-azure-machine-learning" },
+    { id: "foundry-local", name: "Foundry Local", what: "Run optimised models directly on a device — offline, private and with no per-token cost.",
+      use: ["Data must never leave the device.", "Users work offline or at the edge.", "You need instant responses with zero network latency."],
+      avoid: [["You need frontier-scale models or enterprise-scale inference.", "foundry-models"]],
+      learn: L + "azure/foundry-local/what-is-foundry-local" }
+  ]},
+  { id: "power", name: "Power Platform", tag: "Low-code apps, automation and portals", c: "#C239B3", cd: "#E07DD6", nodes: [
+    { id: "power-apps", name: "Power Apps", what: "Build business apps for web and mobile with low code — describe the app and Copilot drafts it.",
+      use: ["You want to replace spreadsheets, paper forms or email-based processes.", "Internal users need an app over Dataverse, SharePoint or SQL data.", "Business teams build and maintain the app themselves."],
+      avoid: [["External customers or partners need to sign in and use it.", "power-pages"], ["You build a high-scale, custom-coded product.", "app-service"]],
+      learn: L + "power-apps/powerapps-overview" },
+    { id: "power-automate", name: "Power Automate", what: "Automate workflows, approvals and desktop tasks (RPA) across 1,000+ connectors.",
+      use: ["You need approvals, notifications or data moving between systems.", "Someone repeats the same clicks in a legacy desktop app every day.", "An agent needs a reliable workflow to call."],
+      avoid: [["Pro developers run high-volume enterprise integration under CI/CD.", "logic-apps"], ["Users need a conversation, not a background workflow.", "copilot-studio"]],
+      learn: L + "power-automate/getting-started" },
+    { id: "power-pages", name: "Power Pages", what: "Secure, low-code websites for external users such as customers, partners and citizens.",
+      use: ["External users need a portal with sign-in, forms and your business data.", "You want a site live fast without a web development team."],
+      avoid: [["Only internal staff use the app.", "power-apps"], ["You need a fully custom, high-traffic web experience.", "app-service"]],
+      learn: L + "power-pages/introduction" },
+    { id: "dataverse", name: "Microsoft Dataverse", what: "The secure business data store behind Power Platform and Dynamics 365.",
+      use: ["Apps, flows and agents need shared relational data with role-based security.", "You need auditing and business rules on your data.", "You plan to extend Dynamics 365."],
+      avoid: [["You analyse large data volumes across many sources.", "fabric"], ["A team just needs a simple list or document library.", "sharepoint"]],
+      learn: L + "power-apps/maker/data-platform/data-platform-intro" },
+    { id: "ai-builder", name: "AI Builder", what: "Prebuilt and custom AI models — document processing, prompts, classification — inside Power Apps and Power Automate.",
+      use: ["A flow must pull fields out of invoices, receipts or ID documents.", "Makers want to classify or summarise text without code.", "You want AI steps inside an existing low-code process."],
+      avoid: [["Developers process documents at very high volume in code.", "foundry-tools"], ["Users need a conversational agent.", "copilot-studio"]],
+      learn: L + "ai-builder/overview" }
+  ]},
+  { id: "data", name: "Data & Analytics", tag: "Unify, analyse and visualise data for AI", c: "#FFB900", cd: "#FFC83D", nodes: [
+    { id: "fabric", name: "Microsoft Fabric", what: "End-to-end SaaS analytics: OneLake, data engineering, warehousing, real-time intelligence and Power BI in one platform.",
+      use: ["You need to unify data from many systems into one governed lake.", "Data engineering and BI teams want one platform.", "You want AI and agents to reason over well-modelled business data."],
+      avoid: [["You only need a few reports on top of Excel or a single database.", "power-bi"], ["An application needs a transactional database.", "azure-sql"]],
+      learn: L + "fabric/fundamentals/microsoft-fabric-overview" },
+    { id: "power-bi", name: "Power BI", what: "Self-service dashboards and reports, with Copilot to ask questions of your data in plain language.",
+      use: ["Leaders need KPIs and dashboards they check regularly.", "You want to share interactive reports in Teams and SharePoint.", "Analysts model data for the business."],
+      avoid: [["You need a one-off deep dive into a dataset.", "researcher-analyst"], ["Users need to enter and edit data.", "power-apps"]],
+      learn: L + "power-bi/fundamentals/power-bi-overview" },
+    { id: "azure-sql", name: "Azure SQL", what: "Fully managed relational database for custom applications.",
+      use: ["Custom apps need a transactional SQL database.", "You migrate SQL Server workloads to the cloud."],
+      avoid: [["Low-code apps need a data store.", "dataverse"], ["You need large-scale analytics.", "fabric"]],
+      learn: L + "azure/azure-sql/azure-sql-iaas-vs-paas-what-is-overview" },
+    { id: "cosmos-db", name: "Azure Cosmos DB", what: "Globally distributed NoSQL and vector database for AI apps at scale.",
+      use: ["Agents need fast memory or chat history storage.", "Apps serve users globally with low latency.", "You want vector search next to operational data."],
+      avoid: [["You need relational reporting and joins.", "azure-sql"]],
+      learn: L + "azure/cosmos-db/introduction" },
+    { id: "databricks", name: "Azure Databricks", what: "Spark-based lakehouse for advanced data engineering and data science.",
+      use: ["Your teams already standardise on Databricks and Spark.", "You run complex data science and ML pipelines on large data."],
+      avoid: [["You want Microsoft-native SaaS analytics tightly linked to Power BI.", "fabric"]],
+      learn: L + "azure/databricks/introduction/" }
+  ]},
+  { id: "collab", name: "Collaboration & Productivity", tag: "Where people work — and where Copilot finds context", c: "#7FBA00", cd: "#9AD13A", nodes: [
+    { id: "teams", name: "Microsoft Teams", what: "Chat, meetings and calls — and the front door where people use Copilot and agents.",
+      use: ["People need to chat, meet and call.", "You want to put agents where people already work.", "Meetings need recaps and action items."],
+      avoid: [["You need governed, long-term document management.", "sharepoint"]],
+      learn: L + "microsoftteams/teams-overview" },
+    { id: "sharepoint", name: "SharePoint", what: "Intranet, document management and the knowledge base that Copilot and agents ground on.",
+      use: ["Teams and the organisation need shared, governed content.", "You want an intranet or team site.", "Agents need a trusted knowledge source."],
+      avoid: [["Content is a personal working draft.", "onedrive"], ["You need complex relational data with business rules.", "dataverse"]],
+      learn: L + "sharepoint/introduction" },
+    { id: "onedrive", name: "OneDrive", what: "Personal cloud storage for work files, with easy sharing.",
+      use: ["You store personal work files and drafts.", "You share a file with a few people quickly."],
+      avoid: [["The team owns the content long term.", "sharepoint"]],
+      learn: L + "sharepoint/onedrive-overview" },
+    { id: "loop", name: "Microsoft Loop", what: "Live, co-editable components and workspaces across Teams, Outlook and Copilot Pages.",
+      use: ["A group plans or brainstorms together in real time.", "You want to turn a Copilot answer into a shared, editable page."],
+      avoid: [["You need a formal, controlled document of record.", "sharepoint"]],
+      learn: L + "microsoft-365/loop/loop-components-teams" },
+    { id: "outlook", name: "Outlook & Exchange Online", what: "Email, calendar and scheduling for the organisation.",
+      use: ["You manage email, calendars and meeting scheduling."],
+      avoid: [["A team needs fast back-and-forth conversation.", "teams"]],
+      learn: L + "exchange/exchange-online" },
+    { id: "viva", name: "Microsoft Viva", what: "Employee experience suite: communities (Viva Engage), learning, goals and workplace insights, including Copilot adoption analytics.",
+      use: ["You build communities and leadership communications.", "You measure Copilot adoption and impact.", "You run learning and goal-setting programmes."],
+      avoid: [["A project team needs day-to-day chat.", "teams"]],
+      learn: L + "viva/microsoft-viva-overview" }
+  ]},
+  { id: "d365", name: "Business Applications", tag: "Dynamics 365 CRM and ERP with built-in agents", c: "#002050", cd: "#6CB8F6", nodes: [
+    { id: "d365-sales", name: "Dynamics 365 Sales", what: "CRM for leads, pipeline and forecasting, with Copilot and sales agents.",
+      use: ["Sellers manage leads, opportunities and forecasts.", "You want AI to research accounts and draft outreach inside the CRM."],
+      avoid: [["You only need a simple contact or lead tracker.", "power-apps"]],
+      learn: L + "dynamics365/sales/overview" },
+    { id: "d365-cs", name: "Dynamics 365 Customer Service & Contact Center", what: "Case management and an AI-first omnichannel contact centre for voice, chat and messaging.",
+      use: ["Support runs on cases, SLAs and queues.", "You run a contact centre across voice and digital channels.", "You want AI agents to resolve and route customer requests."],
+      avoid: [["You need a simple website FAQ bot.", "copilot-studio"]],
+      learn: L + "dynamics365/contact-center/" },
+    { id: "d365-field", name: "Dynamics 365 Field Service", what: "Work orders, scheduling and mobile tools for technicians in the field.",
+      use: ["You dispatch technicians, manage work orders and track assets."],
+      avoid: [["You only track a few simple tasks.", "power-apps"]],
+      learn: L + "dynamics365/field-service/overview" },
+    { id: "d365-erp", name: "Dynamics 365 Finance & Supply Chain", what: "Enterprise ERP for finance, manufacturing and supply chain.",
+      use: ["A large or multinational business runs complex finance and operations."],
+      avoid: [["You run a small or mid-sized business.", "d365-bc"]],
+      learn: L + "dynamics365/finance/" },
+    { id: "d365-bc", name: "Dynamics 365 Business Central", what: "All-in-one ERP for small and mid-sized businesses.",
+      use: ["An SMB needs finance, sales, inventory and purchasing in one system."],
+      avoid: [["Operations span many countries and complex manufacturing.", "d365-erp"]],
+      learn: L + "dynamics365/business-central/" },
+    { id: "d365-ci", name: "Dynamics 365 Customer Insights", what: "Customer data platform and marketing journeys that unify profiles and personalise engagement.",
+      use: ["You need a single view of each customer across systems.", "Marketing runs personalised, triggered journeys."],
+      avoid: [["You only need internal analytics.", "power-bi"]],
+      learn: L + "dynamics365/customer-insights/" }
+  ]},
+  { id: "azure", name: "Azure Apps & Developer", tag: "Host, integrate and code custom solutions", c: "#00A4EF", cd: "#4CC2FF", nodes: [
+    { id: "app-service", name: "Azure App Service", what: "Fully managed hosting for web apps and APIs.",
+      use: ["You host a custom web app or AI front end.", "Developers want managed scaling without servers."],
+      avoid: [["Code only runs on events or a schedule.", "functions"], ["Business users want an internal app with low code.", "power-apps"]],
+      learn: L + "azure/app-service/overview" },
+    { id: "functions", name: "Azure Functions", what: "Serverless, event-driven code that you pay for per execution.",
+      use: ["Code runs on events, schedules or webhooks.", "You expose a lightweight tool or MCP server for agents."],
+      avoid: [["You run long-lived, multi-service apps.", "container-apps"]],
+      learn: L + "azure/azure-functions/functions-overview" },
+    { id: "logic-apps", name: "Azure Logic Apps", what: "Enterprise integration workflows with pro-developer governance and CI/CD.",
+      use: ["IT runs high-volume B2B or system-to-system integration.", "Workflows need source control, networking and enterprise SLAs."],
+      avoid: [["Business users automate their own team processes.", "power-automate"]],
+      learn: L + "azure/logic-apps/logic-apps-overview" },
+    { id: "container-apps", name: "Azure Container Apps", what: "Serverless containers for microservices, APIs and code-first agents.",
+      use: ["You run containerised apps or agents without managing Kubernetes."],
+      avoid: [["A platform team needs full Kubernetes control.", "aks"]],
+      learn: L + "azure/container-apps/overview" },
+    { id: "aks", name: "Azure Kubernetes Service", what: "Managed Kubernetes for teams that need full orchestration control.",
+      use: ["A platform team standardises on Kubernetes across many services."],
+      avoid: [["A small team just needs to run a few containers.", "container-apps"]],
+      learn: L + "azure/aks/what-is-aks" },
+    { id: "apim", name: "Azure API Management", what: "Publish, secure and govern APIs — including an AI gateway for model and MCP traffic.",
+      use: ["You expose internal APIs safely to agents, apps or partners.", "You need token limits, load balancing and monitoring across AI models."],
+      avoid: [["You only have one internal function to call.", "functions"]],
+      learn: L + "azure/api-management/api-management-key-concepts" },
+    { id: "vms", name: "Azure Virtual Machines", what: "On-demand Windows and Linux servers with full operating system control.",
+      use: ["You lift and shift legacy workloads.", "Software needs full OS access or special configuration."],
+      avoid: [["You build a new web app.", "app-service"]],
+      learn: L + "azure/virtual-machines/overview" },
+    { id: "github-copilot", name: "GitHub Copilot", what: "AI pair programmer and coding agent for software developers.",
+      use: ["Developers write, review and refactor code faster.", "You assign issues to a coding agent that opens pull requests."],
+      avoid: [["Non-developers want to build business apps.", "power-apps"]],
+      learn: "https://docs.github.com/copilot" }
+  ]},
+  { id: "security", name: "Security, Identity & Governance", tag: "Protect people, data, devices and agents", c: "#F25022", cd: "#FF7A52", nodes: [
+    { id: "entra", name: "Microsoft Entra ID", what: "Identity and access for people, apps and agents, including Entra Agent ID.",
+      use: ["You need single sign-on, MFA and conditional access.", "Agents need their own governed identities."],
+      avoid: [["You need to manage laptops and phones.", "intune"]],
+      learn: L + "entra/fundamentals/what-is-entra" },
+    { id: "intune", name: "Microsoft Intune", what: "Manage and secure devices and apps across Windows, macOS, iOS and Android.",
+      use: ["You enrol and configure company devices.", "You protect corporate data in mobile apps."],
+      avoid: [["You set identity and sign-in policies.", "entra"]],
+      learn: L + "mem/intune/fundamentals/what-is-intune" },
+    { id: "purview", name: "Microsoft Purview", what: "Data security, compliance and governance: sensitivity labels, DLP, oversharing controls for Copilot, and AI usage oversight.",
+      use: ["You prepare for Copilot by finding and fixing oversharing.", "You need DLP on prompts and AI responses.", "Legal needs retention, audit and eDiscovery."],
+      avoid: [["You need to detect and stop active threats.", "defender"]],
+      learn: L + "purview/purview" },
+    { id: "defender", name: "Microsoft Defender", what: "Extended detection and response across endpoints, email, identity, cloud and AI apps.",
+      use: ["You detect and respond to attacks across the estate.", "You discover and control unsanctioned AI apps."],
+      avoid: [["A SOC needs logs from many non-Microsoft sources in one place.", "sentinel"]],
+      learn: L + "defender-xdr/microsoft-365-defender" },
+    { id: "sentinel", name: "Microsoft Sentinel", what: "Cloud-native SIEM and SOAR across Microsoft and third-party sources.",
+      use: ["Your SOC centralises logs, hunts threats and automates response."],
+      avoid: [["A smaller organisation already gets what it needs from Defender.", "defender"]],
+      learn: L + "azure/sentinel/overview" },
+    { id: "security-copilot", name: "Security Copilot", what: "Generative AI and agents for security and IT teams.",
+      use: ["Analysts need faster incident investigation and summaries.", "You want agents to triage phishing reports and alerts."],
+      avoid: [["Staff want AI help with everyday productivity work.", "m365-copilot"]],
+      learn: L + "copilot/security/microsoft-security-copilot" }
+  ]}
+];
+
+const PICKS = [
+  ["Get help with email & meetings", "m365-copilot"],
+  ["Give everyone safe AI chat", "copilot-chat"],
+  ["Build a Q&A agent on our SharePoint", "agent-builder"],
+  ["Launch a customer-facing agent", "copilot-studio"],
+  ["Build a custom AI app in code", "foundry-agents"],
+  ["Pick the right AI model", "foundry-models"],
+  ["Automate an approval", "power-automate"],
+  ["Replace a spreadsheet with an app", "power-apps"],
+  ["Pull data out of invoices", "ai-builder"],
+  ["Build dashboards & KPIs", "power-bi"],
+  ["Stop Copilot oversharing", "purview"],
+  ["Govern all our agents", "agent-365"]
+];
+
+/* ---------- Index ---------- */
+const NODE = {}, FAM_OF = {};
+FAMILIES.forEach(f => f.nodes.forEach(n => { NODE[n.id] = n; FAM_OF[n.id] = f; }));
+const collapsed = new Set();
+let selected = null, query = "";
+
+const tree = document.getElementById("tree");
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function cols() {
+  const w = tree.clientWidth;
+  return w >= 1100 ? 4 : w >= 680 ? 2 : 1;
+}
+
+let lastCols = 0;
+function render() {
+  const c = cols();
+  lastCols = c;
+  tree.classList.toggle("rail", c === 1);
+  let html = '<div class="trunk" id="trunk"></div><div class="root" id="root"><strong>Microsoft Cloud</strong><span>' +
+    FAMILIES.length + ' families · ' + Object.keys(NODE).length + ' technologies</span></div>';
+  for (let i = 0; i < FAMILIES.length; i += c) {
+    html += '<div class="gen" style="grid-template-columns:repeat(' + c + ',minmax(0,1fr));--bus-inset:' + (100 / c / 2) + '%">';
+    FAMILIES.slice(i, i + c).forEach(f => {
+      const isC = collapsed.has(f.id);
+      html += '<section class="fam' + (isC ? " collapsed" : "") + '" data-fam="' + f.id + '" style="--c:' + f.c + ';--cd:' + f.cd + '">' +
+        '<button class="fam-head" aria-expanded="' + !isC + '" data-toggle="' + f.id + '">' +
+        '<span class="dot"></span><span class="txt"><span class="name">' + esc(f.name) + '</span><span class="tag">' + esc(f.tag) + '</span></span>' +
+        '<span class="meta">' + f.nodes.length + '<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>' +
+        '<ul class="kids">' + f.nodes.map(n =>
+          '<li><button class="node' + (selected === n.id ? " sel" : "") + '" data-id="' + n.id + '"><span class="n">' + esc(n.name) +
+          '</span><span class="w">' + esc(n.what) + '</span></button></li>').join("") + '</ul></section>';
+    });
+    html += '</div>';
+  }
+  tree.innerHTML = html;
+  applySearch();
+  drawTrunk();
+}
+
+function drawTrunk() {
+  const root = $("root"), trunk = $("trunk"), gens = tree.querySelectorAll(".gen");
+  if (!gens.length) return;
+  const top = root.offsetTop + root.offsetHeight;
+  const last = gens[gens.length - 1];
+  const rail = tree.classList.contains("rail");
+  trunk.style.left = rail ? "20px" : "calc(50% - 1px)";
+  trunk.style.top = top + "px";
+  trunk.style.height = (last.offsetTop + (rail ? 29 : 0) - top) + "px";
+}
+
+/* ---------- Search ---------- */
+function applySearch() {
+  const q = query.trim().toLowerCase();
+  let hits = 0;
+  FAMILIES.forEach(f => {
+    const famEl = tree.querySelector('[data-fam="' + f.id + '"]');
+    let famHits = 0;
+    f.nodes.forEach(n => {
+      const el = famEl.querySelector('[data-id="' + n.id + '"]');
+      const text = (n.name + " " + n.what + " " + n.use.join(" ") + " " + f.name).toLowerCase();
+      const match = !q || q.split(/\s+/).every(t => text.includes(t));
+      el.classList.toggle("dim", !!q && !match);
+      el.classList.toggle("hit", !!q && match);
+      if (match) famHits++;
+    });
+    famEl.classList.toggle("dim", !!q && famHits === 0);
+    if (q && famHits) { famEl.classList.remove("collapsed"); famEl.querySelector(".fam-head").setAttribute("aria-expanded", "true"); }
+    hits += famHits;
+  });
+  $("count").textContent = q ? hits + (hits === 1 ? " match" : " matches") : "";
+  $("clear").style.display = q ? "block" : "none";
+  requestAnimationFrame(drawTrunk);
+}
+
+/* ---------- Detail panel ---------- */
+const ICON_OK = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M6.5 10.2l2.4 2.4 4.6-4.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ICON_NO = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M7 7l6 6M13 7l-6 6" stroke-linecap="round"/></svg>';
+
+function select(id, scroll) {
+  const n = NODE[id], f = FAM_OF[id];
+  if (!n) return;
+  selected = id;
+  if (collapsed.has(f.id)) { collapsed.delete(f.id); render(); }
+  tree.querySelectorAll(".node.sel").forEach(e => e.classList.remove("sel"));
+  const el = tree.querySelector('[data-id="' + id + '"]');
+  el.classList.add("sel");
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  $("panel").style.setProperty("--fc", dark ? f.cd : f.c);
+  $("pFam").textContent = f.name;
+  $("pBody").innerHTML =
+    '<h2 id="pName">' + esc(n.name) + '</h2><p class="what">' + esc(n.what) + '</p>' +
+    '<h3 class="use">' + ICON_OK + 'Use it when</h3><ul>' + n.use.map(u => '<li class="u">' + esc(u) + '</li>').join("") + '</ul>' +
+    '<h3 class="avoid">' + ICON_NO + 'Choose something else when</h3><ul>' + n.avoid.map(([t, alt]) =>
+      '<li class="a">' + esc(t) + '<br><button class="alt" data-alt="' + alt + '">Use ' + esc(NODE[alt].name) + ' →</button></li>').join("") + '</ul>' +
+    '<a class="learn" href="' + n.learn + '" target="_blank" rel="noopener">Open on Microsoft Learn ↗</a>';
+  $("pBody").scrollTop = 0;
+  document.body.classList.add("open");
+  if (scroll) el.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+function closePanel() {
+  document.body.classList.remove("open");
+  tree.querySelectorAll(".node.sel").forEach(e => e.classList.remove("sel"));
+  const prev = selected; selected = null;
+  const el = prev && tree.querySelector('[data-id="' + prev + '"]');
+  if (el) el.focus({ preventScroll: true });
+}
+
+/* ---------- Events ---------- */
+tree.addEventListener("click", e => {
+  const t = e.target.closest("[data-toggle]");
+  if (t) {
+    const id = t.dataset.toggle, fam = t.parentElement;
+    collapsed.has(id) ? collapsed.delete(id) : collapsed.add(id);
+    fam.classList.toggle("collapsed", collapsed.has(id));
+    t.setAttribute("aria-expanded", !collapsed.has(id));
+    updateToggleLabel();
+    requestAnimationFrame(drawTrunk);
+    return;
+  }
+  const n = e.target.closest(".node");
+  if (n) select(n.dataset.id, false);
+});
+$("pBody").addEventListener("click", e => {
+  const a = e.target.closest("[data-alt]");
+  if (a) select(a.dataset.alt, true);
+});
+$("pClose").addEventListener("click", closePanel);
+$("scrim").addEventListener("click", closePanel);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && document.body.classList.contains("open")) closePanel(); });
+
+$("q").addEventListener("input", e => { query = e.target.value; applySearch(); });
+$("clear").addEventListener("click", () => { $("q").value = ""; query = ""; applySearch(); $("q").focus(); });
+
+function updateToggleLabel() {
+  $("toggleAll").textContent = collapsed.size === FAMILIES.length ? "Expand all" : "Collapse all";
+}
+$("toggleAll").addEventListener("click", () => {
+  if (collapsed.size === FAMILIES.length) collapsed.clear();
+  else FAMILIES.forEach(f => collapsed.add(f.id));
+  render(); updateToggleLabel();
+});
+
+$("chips").innerHTML = PICKS.map(([label, id]) => '<button class="chip" data-pick="' + id + '">' + esc(label) + '</button>').join("");
+$("chips").addEventListener("click", e => {
+  const c = e.target.closest("[data-pick]");
+  if (c) select(c.dataset.pick, true);
+});
+
+new ResizeObserver(() => { cols() !== lastCols ? render() : drawTrunk(); }).observe(tree);
+render();
+</script>
+</body>
+</html>

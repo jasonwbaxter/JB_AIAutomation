@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Business User Training | Jason Baxter’s Microsoft AI Field Guide</title>
+<style>body { --gc: #0F6CBD; --gcd: #4BA9F7; }
+:root {
+  --bg: #F3F2F1; --card: #FFFFFF; --text: #201F1E; --muted: #605E5C; --line: #C8C6C4; --border: #E1DFDD;
+  --accent: #0078D4; --old: #8A8886; --oldbg: #F3F2F1; --good: #107C10; --soft: #FAF9F8;
+  --shadow: 0 1.6px 3.6px rgba(0,0,0,.13), 0 .3px .9px rgba(0,0,0,.11);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1B1A19; --card: #252423; --text: #F3F2F1; --muted: #C8C6C4; --line: #605E5C; --border: #3B3A39;
+    --accent: #2899F5; --old: #A19F9D; --oldbg: #2D2C2B; --good: #6CCB5F; --soft: #2A2928;
+    --shadow: 0 1.6px 3.6px rgba(0,0,0,.4); color-scheme: dark;
+  }
+  :root:not([data-theme="light"]) body { --gc: var(--gcd); }
+}
+:root[data-theme="dark"] {
+  --bg: #1B1A19; --card: #252423; --text: #F3F2F1; --muted: #C8C6C4; --line: #605E5C; --border: #3B3A39;
+  --accent: #2899F5; --old: #A19F9D; --oldbg: #2D2C2B; --good: #6CCB5F; --soft: #2A2928;
+  --shadow: 0 1.6px 3.6px rgba(0,0,0,.4); color-scheme: dark;
+}
+:root[data-theme="dark"] body { --gc: var(--gcd); }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 15px/1.5 "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; }
+.stripe span:nth-child(1){background:#F25022}.stripe span:nth-child(2){background:#7FBA00}.stripe span:nth-child(3){background:#00A4EF}.stripe span:nth-child(4){background:#FFB900}
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { background: var(--card); border-bottom: 1px solid var(--border); padding-block: 26px 24px; }
+.eyebrow { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 4px; }
+h1 { font-family: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.15; margin: 0 0 8px; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0 0 18px; max-width: 760px; font-size: 16px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.facts span { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 14px; background: var(--soft); border: 1px solid var(--border); }
+.facts span b { color: var(--gc); }
+.runit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.runit div { background: var(--soft); border: 1px solid var(--border); border-top: 3px solid var(--gc); border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.runit h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.runit ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.runit li + li { margin-top: 3px; }
+/* Session track */
+.track { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 0; margin-top: 22px; position: relative; }
+.track::before { content: ""; position: absolute; left: calc(50% / var(--n)); right: calc(50% / var(--n)); top: 15px; height: 2px; background: var(--line); }
+.track a { position: relative; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 0 4px; font-size: 12.5px; font-weight: 600; line-height: 1.25; }
+.track a i { font-style: normal; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--card); border: 2px solid var(--gc); color: var(--gc); font-weight: 700; font-size: 14px; }
+.track a:hover i { background: var(--gc); color: #fff; }
+.track a small { font-weight: 400; color: var(--muted); }
+main { padding-block: 28px 56px; }
+.sessions { display: grid; gap: 18px; }
+.s { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 4px solid var(--gc); padding: 20px 22px; scroll-margin-top: 16px; }
+.s-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.s-head .no { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gc); }
+.s-head h2 { margin: 0; font-size: 20px; font-weight: 600; flex: 1 1 320px; }
+.s-head .time { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.shift { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); align-items: stretch; margin-bottom: 14px; }
+.shift > div { border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.shift .k { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+.shift .from { background: var(--oldbg); color: var(--muted); }
+.shift .from .k { color: var(--old); }
+.shift .to { background: color-mix(in srgb, var(--gc) 10%, var(--card)); border: 1px solid color-mix(in srgb, var(--gc) 35%, transparent); }
+.shift .to .k { color: var(--gc); }
+.shift .arrow { display: grid; place-items: center; color: var(--gc); font-size: 22px; font-weight: 700; padding: 0; }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cols h3 { margin: 0 0 4px; font-size: 13px; font-weight: 700; display: flex; gap: 6px; align-items: center; }
+.cols p, .cols ul { margin: 0; font-size: 14px; }
+.cols ul { padding-left: 18px; }
+.cols .try { background: var(--soft); border-radius: 6px; padding: 10px 12px; }
+.cols .done h3 { color: var(--good); }
+.links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13.5px; font-weight: 600; }
+.links a { text-decoration: none; }
+.links a:hover { text-decoration: underline; }
+.links .rel { color: var(--muted); font-weight: 600; }
+/* Mini visuals */
+.viz { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin: 0 0 14px; }
+.viz .box { flex: 1 1 150px; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; background: var(--soft); min-width: 0; }
+.viz .box b { display: block; font-size: 14px; }
+.viz .box span { font-size: 13px; color: var(--muted); }
+.viz .sep { align-self: center; color: var(--muted); font-weight: 700; }
+.viz .tier { border-top: 4px solid var(--tc); }
+footer { color: var(--muted); font-size: 13px; padding-block: 0 40px; }
+footer .src { margin-top: 8px; }
+@media (max-width: 860px) {
+  .runit, .cols { grid-template-columns: minmax(0, 1fr); }
+  .track { grid-template-columns: repeat(var(--n), minmax(64px, 1fr)); overflow-x: auto; padding-bottom: 6px; }
+}
+@media (max-width: 620px) {
+  .shift { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .shift .arrow { transform: rotate(90deg); height: 22px; }
+  .track a span.t { display: none; }
+  .s { padding: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<a href="index.html" style="display:flex;align-items:center;gap:8px;padding:10px max(16px,env(safe-area-inset-left,0px));font:600 13px/1.2 'Segoe UI',system-ui,sans-serif;text-decoration:none;color:var(--accent,#0078D4);background:var(--card,#fff);border-bottom:1px solid var(--border,#E1DFDD)">&larr; Jason Baxter’s Microsoft AI Field Guide <span style="color:var(--muted,#605E5C);font-weight:400">&middot; all guides</span></a>
+<div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<header><div class="wrap">
+  <p class="eyebrow">Jason Baxter’s Microsoft AI Field Guide · No. 9 · Training: business users</p>
+  <h1>Seven work habits to swap for AI ones</h1>
+  <p class="lede">A short, hands-on plan for everyday Copilot users. Each session swaps one old habit for the AI way of working, with a 10-minute exercise and a clear finish line.</p>
+  <div class="facts"><span><b>Audience:</b> Business users with a Copilot licence</span><span><b>Format:</b> 7 sessions × 30 min</span><span><b>Total:</b> 3.5 hours over 2–4 weeks</span></div>
+  <div class="runit"><div><h3>Before you start</h3><ul><li>Copilot licence assigned and the Microsoft 365 Copilot app installed</li><li>Files moved into OneDrive, Teams or SharePoint</li><li>One real task per person to practise on</li></ul></div><div><h3>How to run it</h3><ul><li>Live session, then practise on real work the same day</li><li>Champions in each team answer questions</li><li>Share the best prompts and skills in a Teams channel</li></ul></div><div><h3>How you’ll know it worked</h3><ul><li>People use Copilot most days, not once a week</li><li>Each person names one agent or skill they rely on</li><li>Survey: time saved per week, before and after</li></ul></div></div>
+  <nav class="track" style="--n:7" aria-label="Sessions"><a href="#s1"><i>1</i><span class="t">Apps → agents</span><small>30 min</small></a><a href="#s2"><i>2</i><span class="t">Filing → structure</span><small>30 min</small></a><a href="#s3"><i>3</i><span class="t">Print → Markdown</span><small>30 min</small></a><a href="#s4"><i>4</i><span class="t">Mouse → computer use</span><small>30 min</small></a><a href="#s5"><i>5</i><span class="t">SOPs → skills</span><small>30 min</small></a><a href="#s6"><i>6</i><span class="t">Review → chat</span><small>30 min</small></a><a href="#s7"><i>7</i><span class="t">Write → edit</span><small>30 min</small></a></nav>
+</div></header>
+<main><div class="wrap"><div class="sessions"><section class="s" id="s1">
+  <div class="s-head"><span class="no">Session 1</span><h2>Apps, agents and tool connections</h2><span class="time">30 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Install an app, learn its menus, and click through it yourself.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Add an agent from the Agent Store, or connect a tool so Copilot can use it for you.</div></div>
+  <div class="viz"><div class="box"><b>App</b><span>You open it and do the work</span></div><span class="sep" aria-hidden="true">→</span><div class="box"><b>Agent</b><span>Does a job for you: Researcher, Analyst, a team agent</span></div><span class="sep" aria-hidden="true">→</span><div class="box"><b>MCP connection</b><span>A plug that lets an agent use another system, like a ticketing or CRM tool</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>An app waits for your clicks. An agent does the task. An MCP connection gives an agent safe access to another system, so it can look things up or take action there.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Open the Agent Store in the Microsoft 365 Copilot app. Add one agent that fits your job and ask it to do one real task.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>You can name one agent you use weekly</li><li>You can say what it connects to and what it can’t see</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/copilot-agent-store" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-premium-guide.html">No. 3: The right Copilot for every job</a></span></div>
+</section><section class="s" id="s2">
+  <div class="s-head"><span class="no">Session 2</span><h2>From filing cabinet to digital structure</h2><span class="time">30 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Folders eight levels deep on your desktop, files called final_v3_REAL.docx, and attachments in email.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Your files in OneDrive, team files in Teams and SharePoint, clear names, one version, and links instead of attachments.</div></div>
+  <div class="viz"><div class="box"><b>OneDrive</b><span>My drafts and working files</span></div><div class="box"><b>Teams and SharePoint</b><span>Team files, one version everyone edits</span></div><div class="box"><b>Clear names</b><span>Project – topic – date, never “final2”</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Copilot only finds what lives in Microsoft 365 and what you have access to. Good names and the right location mean better, faster answers. A copy on your desktop is invisible to Copilot.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Move one live project into a Teams channel. Then ask Copilot: “Summarise the latest on project X and list open decisions.”</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Copilot finds your project file when you describe it</li><li>You share a link, not an attachment</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/microsoft-copilot-requirements" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-365-apps-guide.html">No. 4: Sixteen apps, sorted by the job</a></span></div>
+</section><section class="s" id="s3">
+  <div class="s-head"><span class="no">Session 3</span><h2>Print, export, Markdown, then any format</h2><span class="time">30 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Print to paper or PDF, email it, and retype it when someone needs it in another format.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Keep the source live and share a link. Ask Copilot for Markdown, then turn it into a document, deck, email or page.</div></div>
+  <div class="viz"><div class="box"><b>Markdown</b><span>Plain text with headings and lists that AI reads and writes cleanly</span></div><span class="sep" aria-hidden="true">→</span><div class="box"><b>Word or PDF</b><span>Report or handout</span></div><div class="box"><b>PowerPoint</b><span>Deck from the same outline</span></div><div class="box"><b>Email or Teams post</b><span>Short version for the team</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>A printout is a dead end. Markdown keeps the structure (headings, lists, tables), so the same content converts to any format without retyping or broken layouts.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Ask Copilot for a meeting summary in Markdown. Paste it into Word, then ask Copilot to turn the same outline into a three-slide deck.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>One piece of content reused in three formats</li><li>Nothing retyped by hand</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/cowork/use-cowork" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-in-the-apps.html">No. 6: What Copilot does in every app</a></span></div>
+</section><section class="s" id="s4">
+  <div class="s-head"><span class="no">Session 4</span><h2>From moving the mouse to computer use</h2><span class="time">30 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Click through the same web portal every week to file expenses, copy data or download reports.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Describe the task to Cowork. It works in a hidden Edge tab, asks before sensitive steps, and hands back sign-ins to you.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Agents can now operate websites for you, with your own access and nothing more. You stay in charge: you sign in, you approve anything that submits data, and you check the result.</p><p style="margin:8px 0 0;font-size:13px;color:var(--muted)"><b>Note:</b> Your admin turns on Cowork browser tasks. They run in Cowork on the web in Microsoft Edge, not on mobile.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Ask Cowork to gather information from a site you use every week and put it in a table. Watch the steps, approve them, and check the output.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>One repetitive click task handed off</li><li>You checked the result against the source</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-local-browser" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-premium-guide.html">No. 3: The right Copilot for every job</a></span></div>
+</section><section class="s" id="s5">
+  <div class="s-head"><span class="no">Session 5</span><h2>From SOP documents to skills and agents</h2><span class="time">30 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>A standard operating procedure in a PDF that nobody reads, followed differently by every person.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Turn the SOP into a Cowork skill, or an agent with the SOP as its knowledge, so the AI follows the same steps every time.</div></div>
+  <div class="viz"><div class="box"><b>SOP</b><span>Steps written for people</span></div><span class="sep" aria-hidden="true">→</span><div class="box"><b>Skill</b><span>Steps the AI follows, saved as a SKILL.md file</span></div><span class="sep" aria-hidden="true">→</span><div class="box"><b>Agent</b><span>A skill plus knowledge and tools, shared with the team</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>A skill is an SOP the AI can follow. It runs the same way for everyone, and Cowork checks its quality before you rely on it. Share it, and the whole team works to one standard.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Ask Cowork: “Help me create a skill from this SOP” and attach your most-used procedure. Run it on a real case.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>The skill passes Cowork’s quality check</li><li>A colleague runs it and gets the same result</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/cowork/use-cowork#cowork-skills" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-premium-guide.html">No. 3: The right Copilot for every job</a></span></div>
+</section><section class="s" id="s6">
+  <div class="s-head"><span class="no">Session 6</span><h2>From reading every page to chatting with the document</h2><span class="time">30 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Read 40 pages, highlight, take notes, and compare two versions side by side by hand.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Ask the document: summary, risks, what it asks of you. Compare up to five files in OneDrive. Click the citations.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Copilot answers from the file and shows where each answer came from. You still verify anything that matters, but you start from the answer instead of page one.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Open a contract or policy and ask: “What are the renewal and termination terms?” Click each citation to check it.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Two answers checked against the source</li><li>You know when to read the full text yourself</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/release-notes" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-in-the-apps.html">No. 6: What Copilot does in every app</a></span></div>
+</section><section class="s" id="s7">
+  <div class="s-head"><span class="no">Session 7</span><h2>From writing from scratch to editing with Copilot</h2><span class="time">30 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>A blank page, an hour of drafting, and edits by email.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Draft from your own files, then ask Copilot to edit the document directly. Every change is tracked and you decide.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>You become the editor. Copilot drafts from your emails, files and meetings, restructures on request, and tracks every change so you can accept or undo it.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>In Word, draft a proposal from two of your files. Ask: “Reorganise into Problem, Options, Recommendation.” Review the tracked changes.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>First draft in under 15 minutes</li><li>Every change reviewed before it’s shared</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/release-notes" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-model-guide.html">No. 5: How to pick the right AI model</a></span></div>
+</section></div></div></main>
+<footer><div class="wrap">
+  <p>Created by Jason Baxter · <a href="https://www.linkedin.com/in/jasonwbaxterza" target="_blank" rel="noopener">linkedin.com/in/jasonwbaxterza</a></p>
+  <p class="src">Based on Microsoft Learn as of October 2026, including Microsoft’s Copilot user enablement framework and the secure and governed foundation blueprint. Features roll out by region, platform and licence. This is a personal guide and not an official Microsoft publication.</p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>IT Admin Training | Jason Baxter’s Microsoft AI Field Guide</title>
+<style>body { --gc: #5C2D91; --gcd: #B696E8; }
+:root {
+  --bg: #F3F2F1; --card: #FFFFFF; --text: #201F1E; --muted: #605E5C; --line: #C8C6C4; --border: #E1DFDD;
+  --accent: #0078D4; --old: #8A8886; --oldbg: #F3F2F1; --good: #107C10; --soft: #FAF9F8;
+  --shadow: 0 1.6px 3.6px rgba(0,0,0,.13), 0 .3px .9px rgba(0,0,0,.11);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1B1A19; --card: #252423; --text: #F3F2F1; --muted: #C8C6C4; --line: #605E5C; --border: #3B3A39;
+    --accent: #2899F5; --old: #A19F9D; --oldbg: #2D2C2B; --good: #6CCB5F; --soft: #2A2928;
+    --shadow: 0 1.6px 3.6px rgba(0,0,0,.4); color-scheme: dark;
+  }
+  :root:not([data-theme="light"]) body { --gc: var(--gcd); }
+}
+:root[data-theme="dark"] {
+  --bg: #1B1A19; --card: #252423; --text: #F3F2F1; --muted: #C8C6C4; --line: #605E5C; --border: #3B3A39;
+  --accent: #2899F5; --old: #A19F9D; --oldbg: #2D2C2B; --good: #6CCB5F; --soft: #2A2928;
+  --shadow: 0 1.6px 3.6px rgba(0,0,0,.4); color-scheme: dark;
+}
+:root[data-theme="dark"] body { --gc: var(--gcd); }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 15px/1.5 "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; }
+.stripe span:nth-child(1){background:#F25022}.stripe span:nth-child(2){background:#7FBA00}.stripe span:nth-child(3){background:#00A4EF}.stripe span:nth-child(4){background:#FFB900}
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { background: var(--card); border-bottom: 1px solid var(--border); padding-block: 26px 24px; }
+.eyebrow { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 4px; }
+h1 { font-family: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.15; margin: 0 0 8px; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0 0 18px; max-width: 760px; font-size: 16px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.facts span { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 14px; background: var(--soft); border: 1px solid var(--border); }
+.facts span b { color: var(--gc); }
+.runit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.runit div { background: var(--soft); border: 1px solid var(--border); border-top: 3px solid var(--gc); border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.runit h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.runit ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.runit li + li { margin-top: 3px; }
+/* Session track */
+.track { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 0; margin-top: 22px; position: relative; }
+.track::before { content: ""; position: absolute; left: calc(50% / var(--n)); right: calc(50% / var(--n)); top: 15px; height: 2px; background: var(--line); }
+.track a { position: relative; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 0 4px; font-size: 12.5px; font-weight: 600; line-height: 1.25; }
+.track a i { font-style: normal; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--card); border: 2px solid var(--gc); color: var(--gc); font-weight: 700; font-size: 14px; }
+.track a:hover i { background: var(--gc); color: #fff; }
+.track a small { font-weight: 400; color: var(--muted); }
+main { padding-block: 28px 56px; }
+.sessions { display: grid; gap: 18px; }
+.s { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 4px solid var(--gc); padding: 20px 22px; scroll-margin-top: 16px; }
+.s-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.s-head .no { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gc); }
+.s-head h2 { margin: 0; font-size: 20px; font-weight: 600; flex: 1 1 320px; }
+.s-head .time { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.shift { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); align-items: stretch; margin-bottom: 14px; }
+.shift > div { border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.shift .k { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+.shift .from { background: var(--oldbg); color: var(--muted); }
+.shift .from .k { color: var(--old); }
+.shift .to { background: color-mix(in srgb, var(--gc) 10%, var(--card)); border: 1px solid color-mix(in srgb, var(--gc) 35%, transparent); }
+.shift .to .k { color: var(--gc); }
+.shift .arrow { display: grid; place-items: center; color: var(--gc); font-size: 22px; font-weight: 700; padding: 0; }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cols h3 { margin: 0 0 4px; font-size: 13px; font-weight: 700; display: flex; gap: 6px; align-items: center; }
+.cols p, .cols ul { margin: 0; font-size: 14px; }
+.cols ul { padding-left: 18px; }
+.cols .try { background: var(--soft); border-radius: 6px; padding: 10px 12px; }
+.cols .done h3 { color: var(--good); }
+.links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13.5px; font-weight: 600; }
+.links a { text-decoration: none; }
+.links a:hover { text-decoration: underline; }
+.links .rel { color: var(--muted); font-weight: 600; }
+/* Mini visuals */
+.viz { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin: 0 0 14px; }
+.viz .box { flex: 1 1 150px; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; background: var(--soft); min-width: 0; }
+.viz .box b { display: block; font-size: 14px; }
+.viz .box span { font-size: 13px; color: var(--muted); }
+.viz .sep { align-self: center; color: var(--muted); font-weight: 700; }
+.viz .tier { border-top: 4px solid var(--tc); }
+footer { color: var(--muted); font-size: 13px; padding-block: 0 40px; }
+footer .src { margin-top: 8px; }
+@media (max-width: 860px) {
+  .runit, .cols { grid-template-columns: minmax(0, 1fr); }
+  .track { grid-template-columns: repeat(var(--n), minmax(64px, 1fr)); overflow-x: auto; padding-bottom: 6px; }
+}
+@media (max-width: 620px) {
+  .shift { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .shift .arrow { transform: rotate(90deg); height: 22px; }
+  .track a span.t { display: none; }
+  .s { padding: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<a href="index.html" style="display:flex;align-items:center;gap:8px;padding:10px max(16px,env(safe-area-inset-left,0px));font:600 13px/1.2 'Segoe UI',system-ui,sans-serif;text-decoration:none;color:var(--accent,#0078D4);background:var(--card,#fff);border-bottom:1px solid var(--border,#E1DFDD)">&larr; Jason Baxter’s Microsoft AI Field Guide <span style="color:var(--muted,#605E5C);font-weight:400">&middot; all guides</span></a>
+<div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<header><div class="wrap">
+  <p class="eyebrow">Jason Baxter’s Microsoft AI Field Guide · No. 10 · Training: IT and AI admins</p>
+  <h1>Get the platform ready before the people arrive</h1>
+  <p class="lede">A practical plan for IT and AI administrators. Fix access first, set guardrails and budgets, then give agents trusted data. Each session ends with a check you can show your security lead.</p>
+  <div class="facts"><span><b>Audience:</b> IT, security, data and AI admins</span><span><b>Format:</b> 6 sessions × 60 min</span><span><b>Total:</b> 6 hours, before the user rollout</span></div>
+  <div class="runit"><div><h3>Before you start</h3><ul><li>AI Administrator, SharePoint and Purview admin roles assigned</li><li>A pilot group of 20–50 users</li><li>Auditing turned on in Microsoft Purview</li></ul></div><div><h3>How to run it</h3><ul><li>Follow Microsoft’s blueprint: fix oversharing, set guardrails, meet regulations</li><li>Pilot, then deploy, then operate</li><li>Review agents, costs and alerts every month</li></ul></div><div><h3>How you’ll know it worked</h3><ul><li>No high-risk site is open to everyone</li><li>Every agent has an owner and an approval path</li><li>Every paid service has a budget and an alert</li></ul></div></div>
+  <nav class="track" style="--n:6" aria-label="Sessions"><a href="#s1"><i>1</i><span class="t">Apps → agents</span><small>60 min</small></a><a href="#s2"><i>2</i><span class="t">File shares → SharePoint</span><small>60 min</small></a><a href="#s3"><i>3</i><span class="t">Readiness + guardrails</span><small>60 min</small></a><a href="#s4"><i>4</i><span class="t">Bots → computer use</span><small>60 min</small></a><a href="#s5"><i>5</i><span class="t">Cost control</span><small>60 min</small></a><a href="#s6"><i>6</i><span class="t">Raw data → intelligence</span><small>60 min</small></a></nav>
+</div></header>
+<main><div class="wrap"><div class="sessions"><section class="s" id="s1">
+  <div class="s-head"><span class="no">Session 1</span><h2>Apps, agents and MCP servers: what you now govern</h2><span class="time">60 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Package apps with Intune, assign them to groups, and you’re done.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Also govern agents in the Agent 365 registry: install, block, approve, assign owners, and control which tools and MCP servers they reach.</div></div>
+  <div class="viz"><div class="box"><b>Apps</b><span>Intune and the admin center, as today</span></div><div class="box"><b>Agents</b><span>Agent 365 registry: inventory, owners, approvals, blocks</span></div><div class="box"><b>MCP servers</b><span>Tools agents call; governed by data policies and tool controls</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Agents act, so they need owners, approvals and limits like any user. MCP connectors in Copilot Studio fall under your Power Platform data policies. Agent 365 adds tenant-wide control of which tools agents can use.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>In the Microsoft 365 admin center, open Agents &gt; All agents. Find ownerless agents, check the Requests tab, and block anything you don’t recognise.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Every agent has a named owner</li><li>A documented path to request and approve an agent or MCP server</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/admin/manage/agent-actions" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-tech-family-tree.html">No. 1: The Microsoft Cloud on one map</a></span></div>
+</section><section class="s" id="s2">
+  <div class="s-head"><span class="no">Session 2</span><h2>From file shares to governed SharePoint</h2><span class="time">60 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>File shares, sites open to “Everyone except external users”, and sharing links that never expire.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>SharePoint sites with owners, sensitivity labels at creation, limited sharing links, and sensitive sites hidden from Copilot until they’re fixed.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Copilot shows people what they already have access to. Oversharing is the biggest Copilot risk, and it was already there before Copilot arrived. Clean structure also makes answers more accurate.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Run the SharePoint Advanced Management content assessment. List the 10 most overshared sites, then turn on Restricted Content Discovery for the riskiest ones.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>High-risk sites have owners, labels and fixed sharing</li><li>Copilot no longer surfaces restricted content (check in Purview audit)</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/configure-secure-governed-data-foundation-microsoft-365-copilot" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-in-the-apps.html">No. 6: What Copilot does in every app</a></span></div>
+</section><section class="s" id="s3">
+  <div class="s-head"><span class="no">Session 3</span><h2>Technical readiness and guardrails on every platform</h2><span class="time">60 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Assign licences, switch Copilot on, and fix problems as users report them.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Check readiness per platform, then set guardrails: sensitivity labels, Purview DLP for Copilot, Insider Risk, web search policy and auditing.</div></div>
+  <div class="viz"><div class="box"><b>Windows and Mac</b><span>Current apps, Copilot app, new Outlook, Edge for Cowork browser tasks</span></div><div class="box"><b>iPad and iPhone</b><span>Copilot, Outlook, Teams and Office apps; some features are partial</span></div><div class="box"><b>Android</b><span>Copilot and Teams; Word on phones is summary and chat only</span></div><div class="box"><b>Linux</b><span>Web only: no Teams or Office desktop apps</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Features differ by platform, so a user’s experience depends on their device. Guardrails protect sensitive data by default instead of relying on every user to get it right.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Run the Copilot license details diagnostic for your pilot users. Create a DLP for Copilot policy that blocks files labelled Highly Confidential from grounding.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>A readiness checklist passed on each platform in use</li><li>Guardrails tested with a pilot user and verified in audit</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/secure-govern-copilot-foundational-deployment-guidance" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-devices-ai-guide.html#platforms">No. 8: Copilot on every platform</a></span></div>
+</section><section class="s" id="s4">
+  <div class="s-head"><span class="no">Session 4</span><h2>From shared-account bots to computer use you control</h2><span class="time">60 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>RPA bots on shared service accounts, with passwords in scripts and nobody sure what they touch.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Cowork browser tasks run in the user’s own Edge with their own access. Unattended computer use runs on Windows 365 for Agents.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Computer use lets agents operate apps that have no API. Run it under a real identity, inside your existing Conditional Access and DLP rules, with approvals for sensitive actions.</p><p style="margin:8px 0 0;font-size:13px;color:var(--muted)"><b>Note:</b> Cowork browsing is off by default and needs Microsoft Edge 152 or later.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Turn on Cowork browser access for the pilot group only (Copilot &gt; Settings &gt; Cowork settings). Apply the Edge policy to managed devices.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Browser tasks allowed for the pilot group only</li><li>Policy and approval rules documented</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/cowork/cowork-local-browser" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-devices-ai-guide.html">No. 7: iPad, Cloud PC or Copilot+ PC?</a></span></div>
+</section><section class="s" id="s5">
+  <div class="s-head"><span class="no">Session 5</span><h2>Why AI costs skyrocket, and how to stop it</h2><span class="time">60 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>One licence price per user and no usage bill to watch.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Usage-based Copilot Credits for Cowork, agents and pay-as-you-go, governed by spending policies, user limits and alerts.</div></div>
+  <div class="viz"><div class="box"><b>Wrong model</b><span>Deep reasoning on simple tasks: slower and dearer</span></div><div class="box"><b>Runaway agents</b><span>Autonomous agents looping or calling too many tools</span></div><div class="box"><b>No budgets</b><span>Spend nobody watches until the invoice</span></div><div class="box"><b>No owners</b><span>Nobody accountable per service or team</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Costs jump when people use the most powerful model for everything, agents run without limits, and nobody sets budgets. A budget alert doesn’t stop billing: only disconnecting a service does.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>In Copilot &gt; Cost management, create a spending policy for the pilot with a monthly limit and alerts at 50, 80 and 100 percent. Teach users to start on Auto.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Every paid service has a policy, a budget and an owner</li><li>A monthly cost review is booked with finance</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-overview-copilot-credits" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-model-guide.html">No. 5: How to pick the right AI model</a></span></div>
+</section><section class="s" id="s6">
+  <div class="s-head"><span class="no">Session 6</span><h2>From raw data to trusted intelligence</h2><span class="time">60 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Dump data in a lake, point an agent at it, and hope the answers are right.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Refine data through bronze, silver and gold layers, certify the gold, then describe the business in an ontology so agents use the same language and numbers.</div></div>
+  <div class="viz"><div class="box tier" style="--tc:#A0522D"><b>Bronze</b><span>Raw data as it arrived; restricted access</span></div><span class="sep" aria-hidden="true">→</span><div class="box tier" style="--tc:#8A8886"><b>Silver</b><span>Cleaned, matched and de-duplicated</span></div><span class="sep" aria-hidden="true">→</span><div class="box tier" style="--tc:#C19C00"><b>Gold</b><span>Curated, certified, ready for reports and AI</span></div><span class="sep" aria-hidden="true">→</span><div class="box tier" style="--tc:#5C2D91"><b>Ontology</b><span>Business terms, relationships and rules agents understand</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Raw data has no meaning: duplicates, conflicting definitions and missing context give confident wrong answers. Gold data gives trusted numbers. An ontology (Fabric IQ) adds the meaning, so “customer” and “revenue” mean one thing for every agent.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Pick one KPI. Trace it from the gold report back to its bronze source, endorse the gold semantic model as certified, and generate an ontology from it.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Agents for that domain ground only on certified gold data</li><li>One shared definition for each key business term</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/fabric/onelake/onelake-medallion-lakehouse-architecture" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><a href="https://learn.microsoft.com/fabric/iq/overview" target="_blank" rel="noopener">Fabric IQ ontologies ↗</a><span class="rel">Related: <a href="microsoft-tech-family-tree.html">No. 1: The Microsoft Cloud on one map</a></span></div>
+</section></div></div></main>
+<footer><div class="wrap">
+  <p>Created by Jason Baxter · <a href="https://www.linkedin.com/in/jasonwbaxterza" target="_blank" rel="noopener">linkedin.com/in/jasonwbaxterza</a></p>
+  <p class="src">Based on Microsoft Learn as of October 2026, including Microsoft’s Copilot user enablement framework and the secure and governed foundation blueprint. Features roll out by region, platform and licence. This is a personal guide and not an official Microsoft publication.</p>
+</div></footer>
+</body>
+</html>

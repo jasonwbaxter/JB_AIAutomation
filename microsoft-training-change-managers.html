@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Change Manager Training | Jason Baxter’s Microsoft AI Field Guide</title>
+<style>body { --gc: #CA5010; --gcd: #F7894A; }
+:root {
+  --bg: #F3F2F1; --card: #FFFFFF; --text: #201F1E; --muted: #605E5C; --line: #C8C6C4; --border: #E1DFDD;
+  --accent: #0078D4; --old: #8A8886; --oldbg: #F3F2F1; --good: #107C10; --soft: #FAF9F8;
+  --shadow: 0 1.6px 3.6px rgba(0,0,0,.13), 0 .3px .9px rgba(0,0,0,.11);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1B1A19; --card: #252423; --text: #F3F2F1; --muted: #C8C6C4; --line: #605E5C; --border: #3B3A39;
+    --accent: #2899F5; --old: #A19F9D; --oldbg: #2D2C2B; --good: #6CCB5F; --soft: #2A2928;
+    --shadow: 0 1.6px 3.6px rgba(0,0,0,.4); color-scheme: dark;
+  }
+  :root:not([data-theme="light"]) body { --gc: var(--gcd); }
+}
+:root[data-theme="dark"] {
+  --bg: #1B1A19; --card: #252423; --text: #F3F2F1; --muted: #C8C6C4; --line: #605E5C; --border: #3B3A39;
+  --accent: #2899F5; --old: #A19F9D; --oldbg: #2D2C2B; --good: #6CCB5F; --soft: #2A2928;
+  --shadow: 0 1.6px 3.6px rgba(0,0,0,.4); color-scheme: dark;
+}
+:root[data-theme="dark"] body { --gc: var(--gcd); }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 15px/1.5 "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; }
+.stripe span:nth-child(1){background:#F25022}.stripe span:nth-child(2){background:#7FBA00}.stripe span:nth-child(3){background:#00A4EF}.stripe span:nth-child(4){background:#FFB900}
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { background: var(--card); border-bottom: 1px solid var(--border); padding-block: 26px 24px; }
+.eyebrow { font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 4px; }
+h1 { font-family: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.15; margin: 0 0 8px; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0 0 18px; max-width: 760px; font-size: 16px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.facts span { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 14px; background: var(--soft); border: 1px solid var(--border); }
+.facts span b { color: var(--gc); }
+.runit { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.runit div { background: var(--soft); border: 1px solid var(--border); border-top: 3px solid var(--gc); border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.runit h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.runit ul { margin: 0; padding-left: 18px; font-size: 14px; }
+.runit li + li { margin-top: 3px; }
+/* Session track */
+.track { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 0; margin-top: 22px; position: relative; }
+.track::before { content: ""; position: absolute; left: calc(50% / var(--n)); right: calc(50% / var(--n)); top: 15px; height: 2px; background: var(--line); }
+.track a { position: relative; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 0 4px; font-size: 12.5px; font-weight: 600; line-height: 1.25; }
+.track a i { font-style: normal; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--card); border: 2px solid var(--gc); color: var(--gc); font-weight: 700; font-size: 14px; }
+.track a:hover i { background: var(--gc); color: #fff; }
+.track a small { font-weight: 400; color: var(--muted); }
+main { padding-block: 28px 56px; }
+.sessions { display: grid; gap: 18px; }
+.s { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 4px solid var(--gc); padding: 20px 22px; scroll-margin-top: 16px; }
+.s-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.s-head .no { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gc); }
+.s-head h2 { margin: 0; font-size: 20px; font-weight: 600; flex: 1 1 320px; }
+.s-head .time { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.shift { display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); align-items: stretch; margin-bottom: 14px; }
+.shift > div { border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.shift .k { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+.shift .from { background: var(--oldbg); color: var(--muted); }
+.shift .from .k { color: var(--old); }
+.shift .to { background: color-mix(in srgb, var(--gc) 10%, var(--card)); border: 1px solid color-mix(in srgb, var(--gc) 35%, transparent); }
+.shift .to .k { color: var(--gc); }
+.shift .arrow { display: grid; place-items: center; color: var(--gc); font-size: 22px; font-weight: 700; padding: 0; }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cols h3 { margin: 0 0 4px; font-size: 13px; font-weight: 700; display: flex; gap: 6px; align-items: center; }
+.cols p, .cols ul { margin: 0; font-size: 14px; }
+.cols ul { padding-left: 18px; }
+.cols .try { background: var(--soft); border-radius: 6px; padding: 10px 12px; }
+.cols .done h3 { color: var(--good); }
+.links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13.5px; font-weight: 600; }
+.links a { text-decoration: none; }
+.links a:hover { text-decoration: underline; }
+.links .rel { color: var(--muted); font-weight: 600; }
+/* Mini visuals */
+.viz { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin: 0 0 14px; }
+.viz .box { flex: 1 1 150px; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; background: var(--soft); min-width: 0; }
+.viz .box b { display: block; font-size: 14px; }
+.viz .box span { font-size: 13px; color: var(--muted); }
+.viz .sep { align-self: center; color: var(--muted); font-weight: 700; }
+.viz .tier { border-top: 4px solid var(--tc); }
+footer { color: var(--muted); font-size: 13px; padding-block: 0 40px; }
+footer .src { margin-top: 8px; }
+@media (max-width: 860px) {
+  .runit, .cols { grid-template-columns: minmax(0, 1fr); }
+  .track { grid-template-columns: repeat(var(--n), minmax(64px, 1fr)); overflow-x: auto; padding-bottom: 6px; }
+}
+@media (max-width: 620px) {
+  .shift { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .shift .arrow { transform: rotate(90deg); height: 22px; }
+  .track a span.t { display: none; }
+  .s { padding: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<a href="index.html" style="display:flex;align-items:center;gap:8px;padding:10px max(16px,env(safe-area-inset-left,0px));font:600 13px/1.2 'Segoe UI',system-ui,sans-serif;text-decoration:none;color:var(--accent,#0078D4);background:var(--card,#fff);border-bottom:1px solid var(--border,#E1DFDD)">&larr; Jason Baxter’s Microsoft AI Field Guide <span style="color:var(--muted,#605E5C);font-weight:400">&middot; all guides</span></a>
+<div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<header><div class="wrap">
+  <p class="eyebrow">Jason Baxter’s Microsoft AI Field Guide · No. 11 · Training: change managers</p>
+  <h1>It’s not a training plan. It’s a work redesign.</h1>
+  <p class="lede">A 90-day plan for change managers. Training alone doesn’t change how work gets done: you also redesign the work, rebuild the processes, measure real use, and create the roles of the future.</p>
+  <div class="facts"><span><b>Audience:</b> Change managers, HR and business leads</span><span><b>Format:</b> 6 sessions × 45 min</span><span><b>Total:</b> 4.5 hours across a 90-day programme</span></div>
+  <div class="runit"><div><h3>Before you start</h3><ul><li>An executive sponsor and an AI council</li><li>Three to five priority scenarios with owners</li><li>A usage baseline before rollout</li></ul></div><div><h3>How to run it</h3><ul><li>Days 1–30: get ready and onboard</li><li>Days 31–60: deliver impact in priority scenarios</li><li>Days 61–90: extend, optimise and update roles</li></ul></div><div><h3>How you’ll know it worked</h3><ul><li>Habit, not access: weekly active use rises</li><li>Each scenario shows hours saved against credits spent</li><li>Champions and agent owners in every team</li></ul></div></div>
+  <nav class="track" style="--n:6" aria-label="Sessions"><a href="#s1"><i>1</i><span class="t">Training → fusion</span><small>45 min</small></a><a href="#s2"><i>2</i><span class="t">Reimagine</span><small>45 min</small></a><a href="#s3"><i>3</i><span class="t">Re-engineer</span><small>45 min</small></a><a href="#s4"><i>4</i><span class="t">Analyse usage</span><small>45 min</small></a><a href="#s5"><i>5</i><span class="t">Value vs cost</span><small>45 min</small></a><a href="#s6"><i>6</i><span class="t">Jobs of the future</span><small>45 min</small></a></nav>
+</div></header>
+<main><div class="wrap"><div class="sessions"><section class="s" id="s1">
+  <div class="s-head"><span class="no">Session 1</span><h2>Why training alone fails</h2><span class="time">45 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Send people on a course, tick the box, and expect work to change.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Combine four things: reimagine the work, re-engineer the process, analyse usage, and create the jobs of the future.</div></div>
+  <div class="viz"><div class="box"><b>Reimagine</b><span>Start from the outcome, not the old steps</span></div><div class="box"><b>Re-engineer</b><span>Rebuild processes with skills and agents</span></div><div class="box"><b>Analyse usage</b><span>Measure habits and value, not licences</span></div><div class="box"><b>Jobs of the future</b><span>New roles, skills and career paths</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>People adopt what they see their leaders use and what makes their own day easier. Use ADKAR as the people side: Awareness, Desire, Knowledge, Ability, Reinforcement. Training only covers Knowledge.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>With your sponsor, rank three scenarios by value and ease. Write one success measure for each.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Sponsor and AI council named</li><li>Three scenarios ranked, each with a measure</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/training/paths/explore-how-drive-adoption-microsoft-copilot-m365/" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-ai-business-guide.html">No. 2: Start with the goal, not the tool</a></span></div>
+</section><section class="s" id="s2">
+  <div class="s-head"><span class="no">Session 2</span><h2>Reimagine the work</h2><span class="time">45 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Add AI to each existing step and call it transformation.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Start from the outcome. Ask what the role does when Copilot or an agent produces the first draft, the research or the follow-up.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Speeding up an old process gives small gains. Redesigning it around AI removes whole steps and frees time for judgement, customers and creativity.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Run a one-hour workshop on one process. Mark each step: human, Copilot or agent. Remove the steps nobody needs.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>One process redesigned with a named owner</li><li>Before and after steps documented</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/training/modules/phase-one-envision/" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-premium-guide.html">No. 3: The right Copilot for every job</a></span></div>
+</section><section class="s" id="s3">
+  <div class="s-head"><span class="no">Session 3</span><h2>Re-engineer: SOPs into skills and agents</h2><span class="time">45 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Procedures on a shelf, updated once a year, followed differently by every team.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Process owners turn their top SOPs into skills and agents, with human checkpoints and IT governance.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>A skill makes the best way of working the default way. Human checkpoints keep quality and accountability. IT keeps agents safe and governed (see No. 10).</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>List your five highest-volume SOPs. Pilot one as a Cowork skill with a checkpoint before anything is sent or submitted.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>One skill in daily use</li><li>Time saved per run measured</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/cowork/use-cowork#cowork-skills" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-training-it-admins.html">No. 10: Get the platform ready</a></span></div>
+</section><section class="s" id="s4">
+  <div class="s-head"><span class="no">Session 4</span><h2>Analyse usage, not licences</h2><span class="time">45 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>Report how many licences you assigned.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Track active use, habit formation and power users in the Copilot Dashboard, then add surveys and listening sessions.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Assigned licences tell you nothing about value. Usage patterns show which teams formed a habit, where people are stuck, and who your champions should be.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Take a baseline now. Review at 30, 60 and 90 days. For the three lowest-use teams, ask them why and fix the top blocker.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>A monthly adoption report goes to sponsors</li><li>Each low-use team has an action</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/training/modules/phase-three-drive-value/" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><a href="https://learn.microsoft.com/viva/insights/org-team-insights/copilot-dashboard" target="_blank" rel="noopener">Copilot Dashboard ↗</a><span class="rel">Related: <a href="microsoft-copilot-in-the-apps.html">No. 6: What Copilot does in every app</a></span></div>
+</section><section class="s" id="s5">
+  <div class="s-head"><span class="no">Session 5</span><h2>Value against cost</h2><span class="time">45 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>“AI is free once we have the licence.”</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>Track value per scenario against the credits it uses, and teach people to pick the right model for the job.</div></div>
+  
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>Usage-based agents and deep models cost money per use. Leaders keep funding AI when each scenario shows hours saved, quality gained and what it cost.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Add two columns to your scenario scorecard: hours saved per month and credits spent per month. Review them with IT and finance.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Every scenario shows value and cost</li><li>Model-choice tips are in the user training</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-overview-copilot-credits" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-copilot-model-guide.html">No. 5: How to pick the right AI model</a></span></div>
+</section><section class="s" id="s6">
+  <div class="s-head"><span class="no">Session 6</span><h2>Create the jobs of the future</h2><span class="time">45 min</span></div>
+  <div class="shift"><div class="from"><div class="k">Old way</div>The same job descriptions, with “uses Copilot” added at the bottom.</div><div class="arrow" aria-hidden="true">→</div><div class="to"><div class="k">New way</div>New responsibilities and roles: agent owners, skill authors, AI champions, process designers and data stewards, with career paths to match.</div></div>
+  <div class="viz"><div class="box"><b>Agent owner</b><span>Accountable for what an agent does</span></div><div class="box"><b>Skill author</b><span>Turns know-how into reusable skills</span></div><div class="box"><b>AI champion</b><span>Coaches the team, shares what works</span></div><div class="box"><b>Data steward</b><span>Keeps the gold data trusted</span></div></div>
+  <div class="cols">
+    <div><h3>Why it matters</h3><p>When agents take on tasks, people move to directing, checking and improving the work. Name these roles so the work has owners and people can see a future for themselves.</p></div>
+    <div class="try"><h3>Try it · 10 min</h3><p>Update two job descriptions with AI responsibilities. Launch a champions network with one champion per team.</p></div>
+    <div class="done"><h3>✓ Done when</h3><ul><li>Champions in every team</li><li>Agent owners named for every shared agent</li></ul></div>
+  </div>
+  <div class="links"><a href="https://learn.microsoft.com/training/modules/phase-two-onboard/" target="_blank" rel="noopener">Learn more on Microsoft Learn ↗</a><span class="rel">Related: <a href="microsoft-training-business-users.html">No. 9: Seven work habits to swap</a></span></div>
+</section></div></div></main>
+<footer><div class="wrap">
+  <p>Created by Jason Baxter · <a href="https://www.linkedin.com/in/jasonwbaxterza" target="_blank" rel="noopener">linkedin.com/in/jasonwbaxterza</a></p>
+  <p class="src">Based on Microsoft Learn as of October 2026, including Microsoft’s Copilot user enablement framework and the secure and governed foundation blueprint. Features roll out by region, platform and licence. This is a personal guide and not an official Microsoft publication.</p>
+</div></footer>
+</body>
+</html>
