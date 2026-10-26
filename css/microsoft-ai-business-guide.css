@@ -14,9 +14,7 @@
     }
     .goal { --fc: var(--cd) !important; }
   }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; }
-  body {
+      body {
     background: var(--bg); color: var(--text);
     font-family: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased;
@@ -24,8 +22,7 @@
   button { font: inherit; color: inherit; }
 
   /* Header */
-  .stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; }
-  .stripe span:nth-child(1) { background: #F25022; }
+    .stripe span:nth-child(1) { background: #F25022; }
   .stripe span:nth-child(2) { background: #7FBA00; }
   .stripe span:nth-child(3) { background: #00A4EF; }
   .stripe span:nth-child(4) { background: #FFB900; }

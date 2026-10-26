@@ -17,12 +17,9 @@
   --shadow: 0 1.6px 3.6px rgba(0,0,0,.4); color-scheme: dark;
 }
 :root[data-theme="dark"] body { --gc: var(--gcd); }
-* { box-sizing: border-box; }
-html, body { margin: 0; }
 body { background: var(--bg); color: var(--text); font: 15px/1.5 "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: var(--accent); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; }
 .stripe span:nth-child(1){background:#F25022}.stripe span:nth-child(2){background:#7FBA00}.stripe span:nth-child(3){background:#00A4EF}.stripe span:nth-child(4){background:#FFB900}
 .wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 header { background: var(--card); border-bottom: 1px solid var(--border); padding-block: 26px 24px; }

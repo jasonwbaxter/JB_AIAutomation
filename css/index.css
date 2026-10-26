@@ -38,6 +38,7 @@ a { color: inherit; }
 .stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 6px; }
 .stripe i:nth-child(1) { background: var(--c1); } .stripe i:nth-child(2) { background: var(--c2); }
 .stripe i:nth-child(3) { background: var(--c3); } .stripe i:nth-child(4) { background: var(--c4); }
+.stripe span:nth-child(1) { background: var(--c1); } .stripe span:nth-child(2) { background: var(--c2); } .stripe span:nth-child(3) { background: var(--c3); } .stripe span:nth-child(4) { background: var(--c4); }
 .band { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .wrap { max-width: 1240px; margin: 0 auto; }
 .mono { font-family: var(--mono); }
@@ -53,6 +54,10 @@ a { color: inherit; }
 .navlinks { display: flex; gap: 4px 18px; flex-wrap: wrap; font-weight: 600; font-size: 14.5px; }
 .navlinks a { text-decoration: none; color: var(--on-dark-muted); padding: 6px 0; border-bottom: 2px solid transparent; }
 .navlinks a:hover { color: var(--on-dark); border-bottom-color: var(--cyan); }
+
+/* ---------- Sub-page back link in the brand bar ---------- */
+.topbar .back { color: var(--cyan); font-weight: 600; text-decoration: none; margin-left: auto; white-space: nowrap; }
+.topbar .back:hover { text-decoration: underline; }
 .hero { padding-block: 48px 56px; overflow: hidden; color: var(--on-dark);
   background: linear-gradient(to bottom, rgba(5,8,15,0) 70%, rgba(5,8,15,.65)), url(img/brand/hero-network.webp) center / cover no-repeat, var(--navy); }
 .hero .kicker { color: var(--on-dark-muted); }

@@ -29,9 +29,7 @@
     }
     .fam { --fc: var(--cd) !important; }
   }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; }
-  body {
+      body {
     background: var(--bg);
     color: var(--text);
     font-family: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -43,8 +41,7 @@
   a { color: var(--accent); }
 
   /* ---------- Header ---------- */
-  .stripe { display: grid; grid-template-columns: repeat(4, 1fr); height: 4px; }
-  .stripe span:nth-child(1) { background: #F25022; }
+    .stripe span:nth-child(1) { background: #F25022; }
   .stripe span:nth-child(2) { background: #7FBA00; }
   .stripe span:nth-child(3) { background: #00A4EF; }
   .stripe span:nth-child(4) { background: #FFB900; }
