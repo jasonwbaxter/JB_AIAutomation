@@ -15,14 +15,50 @@ body { --gc: #0A73B8; --gcd: #4BA9F7; }
 .draft { background: #FFF4CE; border: 1px solid #D29C00; color: #594300; padding: 10px 14px; border-radius: 6px; font-size: 13.5px; margin-bottom: 14px; }
 .draft b { color: #392B00; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .draft { background: #3A3015; border-color: #8A7030; color: #F5E6B0; } :root:not([data-theme="light"]) .draft b { color: #FFF0C8; } }
-.pre { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 4px solid #CA5010; padding: 20px 24px; margin-bottom: 24px; }
-.pre h2 { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
-.pre p { margin: 0 0 10px; }
-.pre ul { margin: 0; padding-left: 20px; font-size: 14.5px; }
-.pre li + li { margin-top: 4px; }
-.pre a { color: var(--accent); font-weight: 600; }
+.pre, .guided { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); padding: 20px 24px; margin-bottom: 20px; }
+.pre { border-left: 4px solid #CA5010; }
+.guided { border-left: 4px solid var(--gc); }
+.pre h2, .guided h2 { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
+.pre p, .guided p { margin: 0 0 10px; }
+.pre ul, .guided ul { margin: 0 0 10px; padding-left: 20px; font-size: 14.5px; }
+.pre li + li, .guided li + li { margin-top: 4px; }
+.pre a, .guided a { color: var(--accent); font-weight: 600; }
+.guided .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+.guided .tracks div { background: var(--soft, #F3F2F1); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
+.guided .tracks h3 { margin: 0 0 4px; font-size: 14px; font-weight: 700; color: var(--gc); }
+.guided .tracks p { margin: 0; font-size: 14px; }
+@media (max-width: 640px) { .guided .tracks { grid-template-columns: 1fr; } }
+.steps { counter-reset: step; display: grid; gap: 18px; }
+.step { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); border-left: 4px solid var(--gc); padding: 22px 24px; scroll-margin-top: 16px; counter-increment: step; }
+.step-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.step-head .n { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--gc); color: #fff; font: 800 15px/1 var(--display, "Segoe UI Variable Display"); flex: none; }
+.step-head .n::before { content: counter(step); }
+.step-head h2 { margin: 0; font-size: 20px; font-weight: 600; flex: 1 1 320px; }
+.step-head .area { font: 700 11.5px/1 var(--mono, monospace); letter-spacing: .08em; text-transform: uppercase; color: var(--gc); background: color-mix(in srgb, var(--gc) 10%, var(--card)); padding: 5px 9px; border-radius: 4px; }
+.path { font: 500 13.5px/1.5 var(--mono, "SFMono-Regular", Consolas, monospace); background: var(--soft, #F3F2F1); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; margin: 0 0 14px; overflow-wrap: anywhere; }
+.path b { color: var(--gc); font-weight: 700; }
+.path .sep { color: var(--muted); margin: 0 4px; }
+.step ol { margin: 0 0 14px; padding-left: 22px; font-size: 15px; }
+.step ol li + li { margin-top: 5px; }
+.step ol li b { font-weight: 700; }
+.step .why, .step .done { display: block; margin-top: 10px; font-size: 14px; padding: 10px 14px; border-radius: 6px; }
+.step .why { background: var(--soft, #F3F2F1); border-left: 3px solid var(--muted); }
+.step .why b { color: var(--text); }
+.step .done { background: color-mix(in srgb, var(--good, #107C10) 10%, var(--card)); border-left: 3px solid var(--good, #107C10); }
+.step .done b { color: var(--good, #107C10); }
+.step .done ul { margin: 4px 0 0; padding-left: 20px; }
+.step .links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 10px 18px; font-size: 13.5px; font-weight: 600; }
+.step .links a { text-decoration: none; color: var(--accent); }
+.step .links a:hover { text-decoration: underline; }
 .src { font-size: 13px; color: var(--muted); margin: 24px 0 0; }
 .src a { color: var(--accent); }
+.toc { background: var(--card); border-radius: 8px; box-shadow: var(--shadow); padding: 18px 22px; margin-top: 20px; }
+.toc h3 { margin: 0 0 8px; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.toc ol { margin: 0; padding-left: 22px; font-size: 14.5px; columns: 2; gap: 24px; }
+.toc ol li { break-inside: avoid; margin-bottom: 3px; }
+.toc ol a { color: var(--text); text-decoration: none; }
+.toc ol a:hover { color: var(--accent); text-decoration: underline; }
+@media (max-width: 620px) { .toc ol { columns: 1; } .step-head .area { order: 2; } }
 </style>
 </head>
 <body>
@@ -35,154 +71,229 @@ body { --gc: #0A73B8; --gcd: #4BA9F7; }
 <div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 <header><div class="wrap">
   <p class="draft"><b>Draft for review.</b> This guide is a working draft and is not linked from the home page or the sources index yet.</p>
-  <p class="eyebrow">Jason Baxter’s Microsoft AI Field Guide · Draft · Deployment starter</p>
-  <h1>The 10 switches that start a safe Microsoft 365 Copilot deployment</h1>
-  <p class="lede">Measure first. Then turn on these ten settings across Copilot, agents, MCPs and connectors. One admin, two to three days of focused work, before a single user sees Copilot.</p>
+  <p class="eyebrow">Jason Baxter’s Microsoft AI Field Guide · Draft · Deployment setup guide</p>
+  <h1>Microsoft 365 Copilot: the step-by-step setup guide</h1>
+  <p class="lede">An old-school admin setup guide. Follow the steps in order. Each step tells you where to click in the Microsoft 365 admin center, what to turn on, and when you’re done.</p>
   <div class="facts">
-    <span><b>Audience:</b> AI, Copilot, SharePoint, Teams and Security admins</span>
+    <span><b>Who runs this:</b> AI Administrator (or Global Administrator)</span>
+    <span><b>Time:</b> ~1 day admin, 2–3 days end-to-end</span>
     <span><b>Pilot size:</b> 50–200 users across 3+ functions</span>
-    <span><b>Time:</b> 2–3 days before pilot, then ongoing</span>
   </div>
   <section class="pre" aria-labelledby="precursor">
-    <h2 id="precursor">Before you touch a setting: measure</h2>
-    <p>Three organisations with the same Copilot licence end up in three different places because they start from different baselines. Spend one day with the reports below so you’re deploying on evidence, not assumption.</p>
+    <h2 id="precursor">Step 0 · Understand your organisation first</h2>
+    <p>Before you touch a setting, know your starting point. Spend one morning in these reports so you deploy on evidence, not assumption.</p>
     <ul>
-      <li><strong>Microsoft 365 usage reports</strong> (admin.microsoft.com → <em>Reports</em> → <em>Usage</em>): active users per app, 7 to 180 days. Shows which apps your people already live in. Copilot gives the fastest wins there.</li>
-      <li><strong>Microsoft Adoption Score</strong> (<em>Reports</em> → <em>Adoption Score</em>): six categories now total 600 points, including <em>AI adoption</em>. Benchmarks against peer organisations. Weak categories tell you where your training and change plan should focus.</li>
-      <li><strong>Microsoft Secure Score</strong> (Microsoft Defender portal): your security baseline before you widen access with Copilot. Fix the top five recommended actions first.</li>
-      <li><strong>SharePoint Advanced Management content assessment</strong> (SharePoint admin center → <em>Reports</em>): sites with oversized audiences, Everyone-except-external-users, ownerless and inactive. This is the list that drives switch 5.</li>
-      <li><strong>Microsoft Purview DSPM data risk assessment</strong> (Purview portal): overshared sites with sensitive data, risky sharing links, high-interaction content. This is the list that drives switch 6.</li>
-      <li><strong>Collaboration patterns</strong>: in the admin center usage reports and Adoption Score, look at Teams messages, meeting recordings, SharePoint sites visited and OneDrive files shared. Chat-heavy orgs get fast value from Teams recap; document-heavy orgs get fast value from Word, Excel and SharePoint agents.</li>
+      <li><strong>Microsoft 365 usage reports</strong> &mdash; <code>admin.microsoft.com</code> &rarr; <em>Reports</em> &rarr; <em>Usage</em>. Active users per app over 7&ndash;180 days. Shows where your people already work: that’s where Copilot wins first.</li>
+      <li><strong>Microsoft Adoption Score</strong> &mdash; <em>Reports</em> &rarr; <em>Adoption Score</em>. Six categories totalling 600 points, including <em>AI adoption</em>, benchmarked against similar organisations. Weak categories flag where training needs focus.</li>
+      <li><strong>Microsoft Secure Score</strong> &mdash; Microsoft Defender portal. Your security baseline. Clear the top five recommended actions before you widen access with Copilot.</li>
+      <li><strong>SharePoint Advanced Management Content Management Assessment</strong> &mdash; SharePoint admin center &rarr; <em>Reports</em>. Overshared, ownerless, inactive sites. Keep the list open for Step 8.</li>
+      <li><strong>Microsoft Purview DSPM for AI</strong> &mdash; Purview portal. Overshared sites with sensitive content, risky sharing links. Keep this list open too.</li>
+      <li><strong>Collaboration patterns</strong> &mdash; in the usage reports, note the ratio of Teams messages to meeting recordings to documents shared. Chat-heavy organisations get the fastest win from Teams recap. Document-heavy organisations get the fastest win from Word, Excel and SharePoint agents.</li>
     </ul>
-    <p>Write down three numbers you want to move in 90 days (e.g. meeting-recap usage, documents chatted-with, oversharing-flagged sites remediated). You’ll need them for switch 10’s cost review.</p>
+    <p>Write down three numbers you want to move in 90 days (e.g. weekly active Copilot users, meeting recaps opened, documents chatted-with). You’ll need them for Step 10’s cost review.</p>
   </section>
-  <nav class="track" style="--n:10" aria-label="Switches">
-    <a href="#s1"><i>1</i><span class="t">Licences</span><small>pilot</small></a>
-    <a href="#s2"><i>2</i><span class="t">Apps on</span><small>M365</small></a>
-    <a href="#s3"><i>3</i><span class="t">Teams meetings</span><small>policy</small></a>
-    <a href="#s4"><i>4</i><span class="t">Teams calls</span><small>policy</small></a>
-    <a href="#s5"><i>5</i><span class="t">Oversharing</span><small>SAM RCD</small></a>
-    <a href="#s6"><i>6</i><span class="t">DLP</span><small>Purview</small></a>
-    <a href="#s7"><i>7</i><span class="t">Agents</span><small>registry</small></a>
-    <a href="#s8"><i>8</i><span class="t">MCP</span><small>governance</small></a>
-    <a href="#s9"><i>9</i><span class="t">Connectors</span><small>staged</small></a>
-    <a href="#s10"><i>10</i><span class="t">Budgets</span><small>credits</small></a>
-  </nav>
+  <section class="guided" aria-labelledby="guided">
+    <h2 id="guided">Use the admin center guided setup as your backbone</h2>
+    <p>Microsoft already ships two setup wizards that walk you through most of what follows. Have both open while you work through this guide.</p>
+    <ol>
+      <li>Sign in to <a href="https://admin.microsoft.com/" target="_blank" rel="noopener">admin.microsoft.com</a>.</li>
+      <li>In the left pane, select <strong>&hellip; Show all</strong> &rarr; <strong>Setup</strong>.</li>
+      <li>On the Setup page, open the <strong>Guided setups</strong> tab.</li>
+    </ol>
+    <div class="tracks">
+      <div><h3>Prepare your environment guide</h3><p>Domains, licence assignment, mailboxes, Microsoft 365 Apps install. Run this first on a new tenant, or spot-check it on an established one.</p></div>
+      <div><h3>Microsoft Copilot setup guide</h3><p>Prerequisites check, OneDrive and Outlook readiness, meeting policy, pinning and connectors. This is the Foundations+ wizard that lines up with Steps 1–10 below.</p></div>
+    </div>
+    <p style="margin-top:10px">Think of the wizard as the checklist and this guide as the opinionated commentary. Where Microsoft offers a choice, I’ll tell you which one works best for a safe pilot.</p>
+  </section>
+  <div class="toc" aria-labelledby="toc">
+    <h3 id="toc">The 10 setup steps</h3>
+    <ol>
+      <li><a href="#s1">Prepare the Microsoft 365 foundation</a></li>
+      <li><a href="#s2">Assign Copilot licences to a focused pilot</a></li>
+      <li><a href="#s3">Distribute and pin the Microsoft Copilot app</a></li>
+      <li><a href="#s4">Pin Copilot Chat in Teams and Outlook</a></li>
+      <li><a href="#s5">Deploy and pin the right agents</a></li>
+      <li><a href="#s6">Turn on Copilot in Teams meetings and calls</a></li>
+      <li><a href="#s7">Connect Copilot to your CRM, ERP and website</a></li>
+      <li><a href="#s8">Lock down oversharing before people chat with the tenant</a></li>
+      <li><a href="#s9">Set a Copilot Credit budget with alerts</a></li>
+      <li><a href="#s10">Validate the pilot and hand over to users</a></li>
+    </ol>
+  </div>
 </div></header>
-<main><div class="wrap"><div class="sessions">
+<main><div class="wrap"><div class="steps">
 
-<section class="s" id="s1">
-  <div class="s-head"><span class="no">Switch 1 · Copilot</span><h2>Assign licences to a focused pilot, not “everyone with E5”</h2><span class="time">30 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Light up Copilot for every eligible user on day one.</div><div class="arrow">→</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Assign to a 50–200 person pilot across three or more functions, with champions, before a tenant-wide rollout.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>A broad switch-on hides your early failures and burns the first impression. A focused pilot gives you measurable usage per team, honest feedback and the pattern your training plan builds on.</p></div>
-    <div class="try"><h3>Where to turn it on · 10 min</h3><p>Microsoft 365 admin center → <em>Billing</em> → <em>Licenses</em>. Assign Microsoft 365 Copilot to a security group that holds your pilot users. Add the AI Administrator role to one named owner.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>Pilot group has owners, champions and a Teams channel</li><li>Three success measures agreed with the sponsor</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/microsoft-copilot-requirements" target="_blank" rel="noopener">Microsoft Copilot requirements ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/enablement-resources" target="_blank" rel="noopener">Copilot adoption guide for IT admins ↗</a></div>
+<section class="step" id="s1">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Prepare the Microsoft 365 foundation</h2><span class="area">Foundations+</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> Setup <span class="sep">›</span> Guided setups <span class="sep">›</span> <b>Prepare your environment guide</b></p>
+  <ol>
+    <li>Confirm your custom domains are verified and your DNS is clean.</li>
+    <li>Open the <em>Microsoft 365 Apps setup guide</em>. Confirm your deployment is on <strong>Current Channel</strong> or <strong>Monthly Enterprise Channel</strong>, version <strong>2511 or later</strong>. 2511 is what auto-installs the Microsoft Copilot app on Windows.</li>
+    <li>Open the <em>OneDrive setup guide</em>. Confirm Known Folder Move and automatic sign-in. OneDrive is a prerequisite for many Copilot features.</li>
+    <li>In <em>Settings</em> &rarr; <em>Org settings</em> &rarr; <em>Microsoft 365 Groups</em>, confirm Loop workspaces are enabled. Planner Agent needs Loop.</li>
+    <li>In <em>Settings</em> &rarr; <em>Org settings</em> &rarr; <em>Microsoft Whiteboard</em>, enable Whiteboard for your tenant.</li>
+    <li>Give at least one named person the <strong>AI Administrator</strong> Entra role. Keep the Global Administrator role for break-glass only.</li>
+  </ol>
+  <p class="why"><b>Why:</b> Copilot features depend on current clients and signed-in services. One missing prerequisite breaks a dozen features silently.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Pilot devices on Current / Monthly Enterprise Channel, 2511+</li><li>OneDrive signed in, Loop and Whiteboard on</li><li>AI Administrator role assigned</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoft-365/enterprise/setup-guides-for-microsoft-365" target="_blank" rel="noopener">Setup guides in the admin center ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/microsoft-copilot-requirements" target="_blank" rel="noopener">Microsoft Copilot requirements ↗</a></p>
 </section>
 
-<section class="s" id="s2">
-  <div class="s-head"><span class="no">Switch 2 · Copilot</span><h2>Turn on the apps Copilot needs to work</h2><span class="time">45 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Assume everyone already has the latest apps.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Confirm Microsoft 365 Apps 2511 or later, OneDrive signed in, new Outlook, and the supporting services (Loop, Whiteboard) are enabled for the pilot.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>Copilot features depend on current clients and signed-in services. The Microsoft 365 Copilot app installs automatically on Windows devices running Apps 2511+; older channels and some regions don’t. Features like Planner Agent fail silently if Loop is off.</p></div>
-    <div class="try"><h3>Where to turn it on · 10 min</h3><p>Microsoft 365 Apps admin center → <em>Customization</em> → <em>Device Configuration</em>. Review the Copilot app rollout and your channel. In the Microsoft 365 admin center, enable Loop workspaces and Whiteboard for the pilot group.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>Pilot devices on Current or Monthly Enterprise Channel, 2511 or newer</li><li>Loop, Whiteboard and new Outlook on for the pilot</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/microsoft-copilot-requirements" target="_blank" rel="noopener">Microsoft Copilot requirements ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/optimize-copilot-configuration-settings" target="_blank" rel="noopener">Optimize Microsoft Copilot configuration ↗</a></div>
+<section class="step" id="s2">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Assign Copilot licences to a focused pilot</h2><span class="area">Licensing</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> <b>Billing</b> <span class="sep">›</span> <b>Licenses</b></p>
+  <ol>
+    <li>Create a Microsoft Entra security group called <code>Copilot-Pilot</code>. Add 50&ndash;200 users across three or more functions &mdash; sales, operations, IT, HR, finance.</li>
+    <li>In <em>Billing</em> &rarr; <em>Licenses</em>, open <strong>Microsoft 365 Copilot</strong> and assign the licence to the <code>Copilot-Pilot</code> group.</li>
+    <li>Add two or three named champions per team. These are the people other users will ask when something’s odd.</li>
+    <li>Agree three success measures with the sponsor: weekly active users, scenarios adopted (e.g. meeting recap, chat with doc), and one hard business number tied to a scenario.</li>
+  </ol>
+  <p class="why"><b>Why:</b> A broad switch-on hides your early failures and burns the first impression. A focused pilot gives you measurable usage per team and the pattern your training plan builds on.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Pilot group has owners, champions, and a Teams channel</li><li>Three success measures agreed with the sponsor</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/enablement-resources" target="_blank" rel="noopener">Copilot adoption guide for IT admins ↗</a><a href="https://learn.microsoft.com/microsoft-365/fasttrack/microsoft-365-copilot" target="_blank" rel="noopener">FastTrack Copilot overview ↗</a></p>
 </section>
 
-<section class="s" id="s3">
-  <div class="s-head"><span class="no">Switch 3 · Teams meetings</span><h2>Set the Copilot meeting policy to “On with saved transcript required”</h2><span class="time">30 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Copilot off, or Copilot on without a transcript, so the AI forgets the meeting the moment it ends.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Meeting policy sets Copilot to <em>On with saved transcript required</em>. Transcript is on, retention runs, recap works after the fact.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>This is the default Microsoft now ships and the only setting that reliably gives you recap, catch-up and interpreter after the meeting ends. Without a saved transcript Copilot answers while the meeting is live and then forgets.</p></div>
-    <div class="try"><h3>Where to turn it on · 10 min</h3><p>Teams admin center → <em>Meetings</em> → <em>Meeting policies</em> → open your Global policy → <em>Recording &amp; transcription</em> → set <em>Copilot</em> to <em>On with saved transcript required</em>. Confirm Transcription is On.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>Policy saved on Global and the pilot group policy</li><li>Pilot test meeting shows the “Recap” tab populated</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoftteams/copilot-teams-transcription" target="_blank" rel="noopener">Manage Teams meeting transcription ↗</a><a href="https://learn.microsoft.com/microsoftteams/settings-policies-reference" target="_blank" rel="noopener">Teams settings and policies reference ↗</a></div>
+<section class="step" id="s3">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Distribute and pin the Microsoft Copilot app</h2><span class="area">Distribution</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> <b>Copilot</b> <span class="sep">›</span> <b>Settings</b> <span class="sep">›</span> <b>Pin Microsoft Copilot to the Windows taskbar</b></p>
+  <ol>
+    <li>Confirm your Windows 11 devices run Apps 2511 or later. The Microsoft Copilot app auto-installs in the background &mdash; nothing to package in Intune for most tenants.</li>
+    <li>In <em>Copilot</em> &rarr; <em>Settings</em>, open <strong>Pin Microsoft Copilot to the Windows taskbar</strong>. For the pilot, choose <strong>Pin for selected groups</strong> and pick <code>Copilot-Pilot</code>. (You can switch to <em>Pin for all devices</em> after the pilot.) This setting needs an Intune Administrator role.</li>
+    <li>For users who need to install manually (Mac, personal Windows, EEA tenants), send the <a href="https://www.microsoft.com/microsoft-365/copilot/download-copilot-app" target="_blank" rel="noopener">download page</a>. iOS and Android users get the <em>Microsoft 365 Copilot</em> app from the store.</li>
+    <li>Changes take up to 8 hours on Windows 11 and up to 48 hours on older builds.</li>
+  </ol>
+  <p class="why"><b>Why:</b> You want one obvious icon on every pilot user’s taskbar, consistent across devices. Discoverability is the fastest adoption win.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Copilot app on the taskbar for your pilot group</li><li>Mobile users have the app installed and signed in</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/deploy-microsoft-365-copilot-app" target="_blank" rel="noopener">Deploy the Microsoft 365 Copilot app ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/pin-copilot-taskbar" target="_blank" rel="noopener">Pin Copilot to the Windows taskbar ↗</a></p>
 </section>
 
-<section class="s" id="s4">
-  <div class="s-head"><span class="no">Switch 4 · Teams calls</span><h2>Enable Copilot in Teams calls, with transcript</h2><span class="time">20 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Copilot works in meetings but not in 1:1 or calling-plan calls, so sales and support staff miss the easiest wins.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Calling policy sets Copilot to <em>EnabledWithTranscript</em> with <em>AllowTranscriptionForCalling</em> on, so Copilot catches up calls the same way it catches up meetings.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>Teams calling and PSTN calls are where customer-facing teams spend half their day. Call recap after a customer call is often the “aha moment” that drives adoption.</p></div>
-    <div class="try"><h3>Where to turn it on · 10 min</h3><p>PowerShell: <code>Set-CsTeamsCallingPolicy -Identity &lt;pilot policy&gt; -Copilot EnabledWithTranscript -AllowTranscriptionForCalling $true</code></p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>Pilot users see the Copilot icon during a 1:1 call</li><li>Interpreter available where languages matter</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoftteams/copilot-teams-calling-transcription" target="_blank" rel="noopener">Manage Copilot in Teams calls ↗</a><a href="https://learn.microsoft.com/microsoftteams/interpreter-agent-teams" target="_blank" rel="noopener">Interpreter agent in Teams ↗</a></div>
+<section class="step" id="s4">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Pin Copilot Chat in Teams and Outlook</h2><span class="area">Distribution</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> <b>Copilot</b> <span class="sep">›</span> <b>Settings</b> <span class="sep">›</span> <b>Pin Microsoft Copilot Chat</b> &nbsp;·&nbsp; Teams admin center <span class="sep">›</span> <b>Teams apps</b> <span class="sep">›</span> <b>Setup policies</b></p>
+  <ol>
+    <li>In <em>Copilot</em> &rarr; <em>Settings</em>, confirm <strong>Pin Copilot Chat in Microsoft 365 apps</strong> is set to the default (pinned). As of January 2026 this applies to Teams and Outlook navigation across the whole tenant.</li>
+    <li>Open the <a href="https://admin.teams.microsoft.com" target="_blank" rel="noopener">Teams admin center</a>. Go to <em>Teams apps</em> &rarr; <em>Setup policies</em>. Create a policy called <code>Copilot-Pilot</code>, turn <strong>User pinning</strong> on, add <em>Copilot</em> to <strong>Pinned apps</strong> and rank it near the top.</li>
+    <li>In <em>Group policy assignment</em>, assign that policy to <code>Copilot-Pilot</code>.</li>
+    <li>Teams app changes take a few hours to propagate.</li>
+  </ol>
+  <p class="why"><b>Why:</b> The Copilot Chat icon in Teams and Outlook is where most users land first. If it’s not pinned, they’ll forget it exists.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Copilot Chat visible in Teams and Outlook for the pilot</li><li>Pinned order checked on a pilot user’s client</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/pin-copilot-chat-navbar" target="_blank" rel="noopener">Pin Copilot Chat in Microsoft 365 apps ↗</a><a href="https://learn.microsoft.com/microsoftteams/teams-app-setup-policies" target="_blank" rel="noopener">Teams app setup policies ↗</a></p>
 </section>
 
-<section class="s" id="s5">
-  <div class="s-head"><span class="no">Switch 5 · SharePoint</span><h2>Turn on Restricted Content Discovery for your high-risk sites</h2><span class="time">60 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Enable Copilot, discover oversharing in the first week, panic.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Before the pilot opens, use SharePoint Advanced Management to list the top overshared, ownerless and sensitive sites, and turn on Restricted Content Discovery (RCD) on each one.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>Copilot shows people what they already have access to, so oversharing is the biggest Copilot risk, and it was there before Copilot arrived. RCD removes a site from Copilot and tenant-wide search without changing anyone’s permissions, buying time to fix it properly.</p></div>
-    <div class="try"><h3>Where to turn it on · 10 min</h3><p>SharePoint admin center → <em>Reports</em> → run the Content Management Assessment. Then <em>Sites</em> → <em>Active sites</em> → open a flagged site → <em>Settings</em> → turn <em>Restrict content from Microsoft Copilot</em> on. Repeat per site, or use Catalog management for a group.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>Top 10 flagged sites have RCD on, or an owner and a remediation plan</li><li>Report of RCD coverage filed with your security lead</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/sharepoint/restricted-content-discovery" target="_blank" rel="noopener">Restrict discovery of SharePoint sites and content ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/get-ready-copilot-sharepoint-advanced-management" target="_blank" rel="noopener">Get ready for Copilot with SharePoint Advanced Management ↗</a></div>
+<section class="step" id="s5">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Deploy and pin the right agents so people find them</h2><span class="area">Agents</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> <b>Agents</b> <span class="sep">›</span> <b>All agents</b> <span class="sep">›</span> <b>Registry</b></p>
+  <ol>
+    <li>Review the <em>Registry</em>. Filter by <strong>Missing an owner</strong> and assign owners. Filter by <strong>Availability: All users</strong> to see what’s already open to everyone.</li>
+    <li>For each agent you want in the pilot (start with Researcher and Analyst from Microsoft, plus one or two role-specific agents), open the detail pane and select <strong>Install</strong>. Choose <em>Specific users or groups</em> and pick <code>Copilot-Pilot</code>.</li>
+    <li>From the <em>All agents</em> page, open the <strong>&hellip;</strong> menu and select <strong>Manage pinned agents</strong>. You have three admin slots per user. Pin one all-user agent (e.g. an IT help agent) and reserve two slots for role-specific agents (sales → Sales Coach, HR → HR Q&amp;A).</li>
+    <li>Set up the <strong>Requests</strong> tab. When users request a blocked agent, you’ll get a notification; review and approve weekly.</li>
+    <li>Publish an internal page explaining <em>User-pinned</em> vs <em>Admin-pinned</em> vs <em>Microsoft-pinned</em> so pilot users understand the layout.</li>
+  </ol>
+  <p class="why"><b>Why:</b> If the right agent isn’t visible in the first click, users default to generic chat and miss the point. Admin-pinning is the single highest-leverage adoption switch.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Every agent in the pilot has a named owner</li><li>Up to three pinned agents per user group, aligned to role</li><li>Request-approval path documented</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoft-365/admin/manage/agent-registry" target="_blank" rel="noopener">Manage the agent registry ↗</a><a href="https://learn.microsoft.com/microsoft-365/admin/manage/agent-actions" target="_blank" rel="noopener">Agent governance actions ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/agent-essentials/m365-agents-admin-guide" target="_blank" rel="noopener">Agents admin guide ↗</a></p>
 </section>
 
-<section class="s" id="s6">
-  <div class="s-head"><span class="no">Switch 6 · Purview</span><h2>Set up Purview DLP for Copilot</h2><span class="time">45 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Rely on access permissions alone, so one mislabelled file ends up in a Copilot answer.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Purview DLP for Copilot excludes files with sensitivity labels like Confidential or Highly Confidential from Copilot grounding, and can block prompts containing sensitive data.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>DLP is the second layer of defence after RCD, and it works at the label and keyword level across the whole tenant. It keeps the right content in Copilot and the sensitive content out, without you having to find every site.</p></div>
-    <div class="try"><h3>Where to turn it on · 10 min</h3><p>Microsoft Purview portal → <em>Data Loss Prevention</em> → <em>Policies</em> → new policy → location <em>Microsoft 365 Copilot</em>. Scope to the pilot group, exclude the most sensitive labels from grounding, test, then expand.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>At least one DLP for Copilot policy live in test mode</li><li>Audit logs confirm Copilot no longer surfaces restricted content</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/configure-secure-governed-data-foundation-microsoft-365-copilot" target="_blank" rel="noopener">Configure a secure and governed foundation ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/secure-govern-copilot-foundational-deployment-guidance" target="_blank" rel="noopener">Secure and govern Microsoft Copilot ↗</a></div>
+<section class="step" id="s6">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Turn on Copilot in Teams meetings and calls</h2><span class="area">Teams</span></div>
+  <p class="path"><b>Where:</b> Teams admin center <span class="sep">›</span> <b>Meetings</b> <span class="sep">›</span> <b>Meeting policies</b> &nbsp;·&nbsp; Teams admin center <span class="sep">›</span> <b>Voice</b> <span class="sep">›</span> <b>Calling policies</b></p>
+  <ol>
+    <li>Open your Global meeting policy (or a pilot policy). Under <em>Recording &amp; transcription</em>, set <strong>Transcription</strong> to <em>On</em>.</li>
+    <li>Set <strong>Copilot</strong> to <strong>On with saved transcript required</strong> &mdash; the only setting that reliably gives you recap, catch-up and interpreter after the meeting ends.</li>
+    <li>Open the <em>Calling policies</em>. Set the pilot policy’s Copilot value, from PowerShell: <code>Set-CsTeamsCallingPolicy -Identity &lt;policy&gt; -Copilot EnabledWithTranscript -AllowTranscriptionForCalling $true</code></li>
+    <li>Test a 1:1 meeting and a VoIP call with a pilot user. Confirm the <em>Recap</em> tab is populated and the Copilot icon appears during the call.</li>
+  </ol>
+  <p class="why"><b>Why:</b> Without a saved transcript Copilot only answers while the meeting is live and then forgets. Calls are where customer-facing teams get the fastest wins.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Meeting policy saved on Global or the pilot policy</li><li>Call policy on, test call shows the Copilot icon</li><li>Recap tab populated on a test meeting</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoftteams/copilot-teams-transcription" target="_blank" rel="noopener">Manage Teams meeting transcription ↗</a><a href="https://learn.microsoft.com/microsoftteams/copilot-teams-calling-transcription" target="_blank" rel="noopener">Manage Copilot in Teams calls ↗</a></p>
 </section>
 
-<section class="s" id="s7">
-  <div class="s-head"><span class="no">Switch 7 · Agents</span><h2>Open the Agent 365 registry and set governance before people build</h2><span class="time">60 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Agents appear in the Agent Store with no owners, no approval and no audit.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Agent 365 registry is the source of truth. Every agent has an owner. Microsoft-built agents are approved per group. New agent requests go through a lightweight path. Blocking is in place.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>Agents act under a real identity and reach your data. They need the same treatment as any user: ownership, approvals, and the ability to block fast. Agent 365 gives you one place to do it.</p></div>
-    <div class="try"><h3>Where to turn it on · 15 min</h3><p>Microsoft 365 admin center → <em>Agents</em> → <em>All agents</em> → <em>Registry</em>. Assign the AI Administrator role to one named person. Review each agent, assign owners, publish a request form in Viva Engage and run the Requests tab weekly.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>Every active agent has an owner</li><li>A written request and approval path (even one page) exists</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/admin/manage/agent-actions" target="_blank" rel="noopener">Agent governance in the Microsoft 365 admin center ↗</a><a href="https://learn.microsoft.com/microsoft-agent-365/overview" target="_blank" rel="noopener">Microsoft Agent 365 overview ↗</a></div>
+<section class="step" id="s7">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Connect Copilot to your CRM, ERP and website</h2><span class="area">Connectors</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> <b>Settings</b> <span class="sep">›</span> <b>Search &amp; intelligence</b> <span class="sep">›</span> <b>Data sources</b> <span class="sep">›</span> <b>Connectors</b></p>
+  <ol>
+    <li>Pick one high-value source first. Common starters:
+      <ul>
+        <li><strong>CRM</strong> &mdash; Salesforce, Dynamics 365, HubSpot</li>
+        <li><strong>ERP / line-of-business</strong> &mdash; SAP, Oracle, SQL databases, Dynamics 365 Finance</li>
+        <li><strong>Service management</strong> &mdash; ServiceNow Tickets or Knowledge, Zendesk</li>
+        <li><strong>Project &amp; dev</strong> &mdash; Jira, Confluence, Azure DevOps</li>
+        <li><strong>Website / intranet</strong> &mdash; Enterprise Websites (public and intranet URLs, up to 50 per connection)</li>
+        <li><strong>HR / people</strong> &mdash; Workday, BambooHR</li>
+      </ul>
+    </li>
+    <li>In <em>Connectors</em>, select the prebuilt connector. Click <strong>Add</strong>, provide the credentials (service account recommended) and the connection name.</li>
+    <li>Use the connector’s <em>Enhance Copilot discovery</em> page to write a good description and keywords. The description tells Copilot when to use the connector.</li>
+    <li>Choose <strong>Staged rollout</strong> and scope to the <code>Copilot-Pilot</code> group. Index the content, then wait for the first full crawl (hours to days).</li>
+    <li>For on-premises content, install the <strong>Microsoft Graph connector agent</strong> on a Windows server inside your network.</li>
+    <li>After one week, review the <em>Content</em> tab. Ask pilot users for a Copilot answer that cites the new source. If quality is good, add the next connector. One at a time.</li>
+  </ol>
+  <p class="why"><b>Why:</b> Copilot is only as smart as the data it can reach. One well-indexed connector often beats three noisy ones &mdash; stale or duplicated content hurts answer quality.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>One connector live, scoped to the pilot</li><li>Pilot users can get Copilot to cite the new source</li><li>A written list of the next three connectors, prioritised</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/connectors/deployment-overview" target="_blank" rel="noopener">Deploy connectors in the admin center ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/connectors/prebuilt-connectors-overview" target="_blank" rel="noopener">Prebuilt connectors ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/connectors/enhance-copilot-discovery" target="_blank" rel="noopener">Enhance Copilot discovery ↗</a></p>
 </section>
 
-<section class="s" id="s8">
-  <div class="s-head"><span class="no">Switch 8 · MCP</span><h2>Govern Model Context Protocol servers in Copilot Studio</h2><span class="time">45 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Any maker can wire any MCP server to an agent, so agents reach systems your security team never saw.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Generative orchestration is on where needed, Power Platform DLP policies decide which connectors agents may use, and Agent 365 controls which MCP servers are available tenant-wide.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>MCP connectors inherit your Power Platform data-loss-prevention policies. If DLP is right, MCP is governed. If DLP is loose, MCP is loose. Set it before makers find out.</p></div>
-    <div class="try"><h3>Where to turn it on · 15 min</h3><p>Power Platform admin center → <em>Policies</em> → <em>Data policies</em>. Create a Copilot DLP policy that assigns each business connector to Business, Non-business or Blocked. In Copilot Studio, enable Generative Orchestration only where you need MCP. Review the gallery of enabled MCP servers in Agent 365.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>A written list of allowed, non-business and blocked connectors</li><li>Agent 365 tool controls set for the pilot group</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoft-copilot-studio/agent-extend-action-mcp" target="_blank" rel="noopener">Extend an agent with MCP ↗</a><a href="https://learn.microsoft.com/microsoft-copilot-studio/mcp-add-components-to-agent" target="_blank" rel="noopener">Add MCP tools and resources to an agent ↗</a></div>
+<section class="step" id="s8">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Lock down oversharing before people chat with the tenant</h2><span class="area">Security</span></div>
+  <p class="path"><b>Where:</b> SharePoint admin center <span class="sep">›</span> <b>Reports</b> &nbsp;·&nbsp; Microsoft Purview portal <span class="sep">›</span> <b>Data Loss Prevention</b></p>
+  <ol>
+    <li>In the SharePoint admin center, run the <strong>Content Management Assessment</strong>. Export the list of overshared, ownerless and inactive sites you saw in Step 0.</li>
+    <li>For each high-risk site, go to <em>Active sites</em> &rarr; open the site &rarr; <em>Settings</em> &rarr; turn on <strong>Restrict content from Microsoft Copilot</strong>. For many sites at once, use <em>Catalog management</em>.</li>
+    <li>In the Purview portal, open <em>Data Loss Prevention</em> &rarr; <em>Policies</em>. Create a policy with location <strong>Microsoft 365 Copilot</strong>, scope to the pilot group, exclude files with your top sensitivity labels from grounding. Start in <em>Test mode</em>.</li>
+    <li>After a week in test mode, review Purview audit logs. If no false positives, switch the policy to <em>On</em>.</li>
+    <li>Document which sites are restricted and the owner remediation plan for each.</li>
+  </ol>
+  <p class="why"><b>Why:</b> Copilot shows people what they already have access to. Oversharing is the biggest Copilot risk, and it was there before Copilot arrived. RCD removes a site from Copilot discovery without changing anyone’s permissions, giving owners time to fix the real issue.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Top 10 risky sites have RCD on or an owner and plan</li><li>A DLP for Copilot policy live in test or production</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/sharepoint/restricted-content-discovery" target="_blank" rel="noopener">Restrict discovery of SharePoint sites ↗</a><a href="https://learn.microsoft.com/microsoft-365/copilot/configure-secure-governed-data-foundation-microsoft-365-copilot" target="_blank" rel="noopener">Configure a secure foundation for Copilot ↗</a></p>
 </section>
 
-<section class="s" id="s9">
-  <div class="s-head"><span class="no">Switch 9 · Connectors</span><h2>Roll out Copilot connectors (Graph connectors) in stages</h2><span class="time">60 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Point Copilot at every system on day one and hope the answers get better.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>Start with one high-value connector (ServiceNow, Jira, Salesforce or a file share). Staged rollout to the pilot. Measure answer quality before adding the next.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>Each connector widens the data surface Copilot reasons over. More connectors isn’t always better: duplicated or stale content hurts quality. Staged rollout keeps the signal clean and the cost predictable.</p></div>
-    <div class="try"><h3>Where to turn it on · 15 min</h3><p>Microsoft 365 admin center → <em>Settings</em> → <em>Search &amp; intelligence</em> → <em>Connectors</em>. Create a connection, run staged rollout to the pilot group, and check indexed items in <em>Content</em>. Ask the pilot for feedback for two weeks before adding the next.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>One connector live, scoped to the pilot</li><li>A measured improvement, or a decision not to continue</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoft-365-copilot/extensibility/overview-copilot-connector" target="_blank" rel="noopener">Microsoft 365 Copilot connectors overview ↗</a><a href="https://learn.microsoft.com/microsoftsearch/configure-connector" target="_blank" rel="noopener">Set up Copilot connectors ↗</a></div>
+<section class="step" id="s9">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Set a Copilot Credit budget with alerts</h2><span class="area">Cost</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> <b>Copilot</b> <span class="sep">›</span> <b>Cost management</b></p>
+  <ol>
+    <li>In <em>Cost management</em>, create a spending policy for <code>Copilot-Pilot</code>. Link an Azure subscription for pay-as-you-go.</li>
+    <li>Set a monthly budget. Add alert thresholds at 50, 80 and 100 percent, routed to a mail-enabled security group with IT and finance.</li>
+    <li>Decide which services the policy covers: Cowork, SharePoint agents, Copilot Studio agents, pay-as-you-go. Assign a named owner per service.</li>
+    <li>Remember: hitting 100 percent of the budget sends an alert &mdash; it does <strong>not</strong> stop billing. Only disconnecting a service stops the clock.</li>
+  </ol>
+  <p class="why"><b>Why:</b> Usage-based services bill per call. The three ways costs run away: wrong model for the task, agents left looping, and no owner per service.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>Every paid service has a policy, a budget and an owner</li><li>Monthly cost review booked with finance for 30 days out</li></ul>
+  <p class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-overview-copilot-credits" target="_blank" rel="noopener">Usage-based billing for Copilot Credits ↗</a><a href="https://learn.microsoft.com/microsoft-365/commerce/services/pay-as-you-go-budget" target="_blank" rel="noopener">Create a budget for pay-as-you-go ↗</a></p>
 </section>
 
-<section class="s" id="s10">
-  <div class="s-head"><span class="no">Switch 10 · Cost</span><h2>Set a Copilot Credit spending policy with budget and alerts</h2><span class="time">30 min</span></div>
-  <div class="shift"><div class="from"><div class="k">Old way</div>Pay-as-you-go for Cowork, agents and connectors with no limit, so finance finds out at the invoice.</div><div class="arrow">→</div><div class="to"><div class="k">New way</div>A spending policy per team with a monthly budget, pay-as-you-go on top of pre-purchased credits, and alerts at 50, 80 and 100 percent.</div></div>
-  <div class="cols">
-    <div><h3>Why it matters</h3><p>Agent 365, Cowork and MCP calls are usage-based. The three ways costs run away: wrong model for the task, agents left looping overnight, and no owner per service. Alerts give you the signal, policies give you the control.</p></div>
-    <div class="try"><h3>Where to turn it on · 10 min</h3><p>Microsoft 365 admin center → <em>Copilot</em> → <em>Cost management</em>. Create a spending policy for the pilot, link an Azure subscription for pay-as-you-go, set a monthly budget and alerts at 50, 80 and 100 percent, with named owners.</p></div>
-    <div class="done"><h3>✓ Done when</h3><ul><li>Every paid service has a policy, a budget and an owner</li><li>Monthly cost review booked with finance for 30 days out</li></ul></div>
-  </div>
-  <div class="links"><a href="https://learn.microsoft.com/microsoft-365/copilot/usage-based-billing-overview-copilot-credits" target="_blank" rel="noopener">Usage-based billing for Copilot Credits ↗</a><a href="https://learn.microsoft.com/microsoft-365/commerce/services/pay-as-you-go-budget" target="_blank" rel="noopener">Create a budget for pay-as-you-go ↗</a></div>
+<section class="step" id="s10">
+  <div class="step-head"><span class="n" aria-hidden="true"></span><h2>Validate the pilot and hand over to users</h2><span class="area">Go-live</span></div>
+  <p class="path"><b>Where:</b> Microsoft 365 admin center <span class="sep">›</span> <b>Reports</b> <span class="sep">›</span> <b>Usage</b> &nbsp;·&nbsp; <code>aka.ms/CopilotLicenseDetails</code></p>
+  <ol>
+    <li>Run the <strong>Copilot License Details diagnostic</strong> for three pilot users to confirm the licence, apps and policies are correct.</li>
+    <li>Walk two pilot users through a scripted test: open the Copilot app, run a Teams meeting recap, chat with a document, call a pinned agent, ask a question that must come from your new connector. Fix anything that fails.</li>
+    <li>Baseline the three measures from Step 2 in Reports &rarr; Usage and the <strong>Copilot Dashboard</strong> in Viva Insights.</li>
+    <li>Send a short welcome message to the pilot: what’s pinned, where to ask for help, what to try first. Keep it under 150 words.</li>
+    <li>Book 30-, 60- and 90-day reviews with the sponsor. Each one should answer: are the three numbers moving, what’s the next connector or agent, and should we expand the pilot?</li>
+  </ol>
+  <p class="why"><b>Why:</b> A validated pilot is the evidence you need to go wider. A pilot you can’t measure is a pilot you can’t defend.</p>
+  <p class="done"><b>Done when:</b></p>
+  <ul><li>License diagnostic clean for three users</li><li>Scripted test passed end-to-end</li><li>30/60/90-day reviews booked</li></ul>
+  <p class="links"><a href="https://aka.ms/CopilotLicenseDetails" target="_blank" rel="noopener">Copilot License Details diagnostic ↗</a><a href="https://learn.microsoft.com/viva/insights/org-team-insights/copilot-dashboard" target="_blank" rel="noopener">Copilot Dashboard in Viva Insights ↗</a><a href="https://adoption.microsoft.com/copilot" target="_blank" rel="noopener">Microsoft Copilot Success Kit ↗</a></p>
 </section>
 
-<p class="src">Based on Microsoft Learn and Microsoft Support as of October 2026. Settings and feature names roll out on their own schedule. See the <a href="sources.html">sources page</a> for every link cited across the Field Guide.</p>
+</div>
 
-</div></div></main>
+<p class="src">Based on Microsoft Learn and Microsoft Support as of October 2026. Menu paths and feature names roll out on their own schedule. See the <a href="sources.html">sources page</a> for every link cited across the Field Guide.</p>
+
+</div></main>
 </body>
 </html>
